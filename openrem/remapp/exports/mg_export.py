@@ -551,7 +551,7 @@ def mgxlsx(filterdict, pid=False, name=None, patid=None, user=None):
         "Filter thickness max",
         "Focal spot size",
         "kVp",
-        "mA",
+        "mA first pulse",
         "ms",
         "uAs",
         "ESD",
