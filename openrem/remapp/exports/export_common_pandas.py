@@ -1970,34 +1970,34 @@ def create_mg_pulse_columns(df_unprocessed):
         .drop_duplicates(["Acquisition pk", "kVp pk"])
         .sort_values(by=["kVp pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"])["kVp"]
-        .transform(lambda x: " | ".join(map(str, x)))  # pylint disable=unnecessary-lambda
+        .transform(lambda x: " | ".join(map(str, x[1:])))  # pylint disable=unnecessary-lambda
     )
     df_unprocessed["uAs Concatenated"] = (  # pylint disable=unnecessary-lambda
         df_unprocessed[df_unprocessed["uAs"].notnull()]
         .drop_duplicates(["Acquisition pk", "exposure pk"])
         .sort_values(by=["exposure pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"])["uAs"]
-        .transform(lambda x: " | ".join(map(str, x)))  # pylint disable=unnecessary-lambda
+        .transform( lambda x: " | ".join(map(str, x[1:])))  # pylint disable=unnecessary-lambda
     )
     df_unprocessed["ms Concatenated"] = (  # pylint disable=unnecessary-lambda
         df_unprocessed[df_unprocessed["ms"].notnull()]
         .drop_duplicates(["Acquisition pk", "pulsewidth pk"])
         .sort_values(by=["pulsewidth pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"])["ms"]
-        .transform(lambda x: " | ".join(map(str, x)))  # pylint disable=unnecessary-lambda
+        .transform(lambda x: " | ".join(map(str, x[1:])))  # pylint disable=unnecessary-lambda
     )
     df_unprocessed["mA Concatenated"] = (  # pylint disable=unnecessary-lambda
         df_unprocessed[df_unprocessed["mA"].notnull()]
         .drop_duplicates(["Acquisition pk", "xraytubecurrent pk"])
         .sort_values(by=["xraytubecurrent pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"])["mA"]
-        .transform(lambda x: " | ".join(map(str, x)))  # pylint disable=unnecessary-lambda
+        .transform(lambda x: " | ".join(map(str, x[1:])))  # pylint disable=unnecessary-lambda
     )
 
     #######################################################
     # Calculate the mean of the kVp, uAs, ms and mA for each pulse of an exposure, excluding the first
     # pulse because we're going to assume that is the AEC pre-pulse, rather than part of the main exposure.
-    # This stackoverflowo post was useful for this section:
+    # This stackoverflow post was useful for this section:
     # https://stackoverflow.com/questions/46938572/pandas-groupby-mean-into-a-dataframe
     required_mean_field_dict = {
         "kVp": "kVp pk",
@@ -2030,7 +2030,7 @@ def create_mg_pulse_columns(df_unprocessed):
         # df_unprocesed) it works correctly.
         df_unprocessed = df_unprocessed.set_index(["Acquisition pk"])
 
-        # Add the mena_data to df_unprocessed.
+        # Add the mean_data to df_unprocessed.
         df_unprocessed[f"{mean_field} Mean"] = mean_data
 
         # Reset the index of df_unprocessed.
