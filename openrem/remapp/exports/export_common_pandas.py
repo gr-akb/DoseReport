@@ -1965,28 +1965,28 @@ def create_image_view_modifier_column(df_unprocessed):
 
 
 def create_mg_pulse_columns(df_unprocessed):
-    df_unprocessed["kVp Concatenated"] = (  # pylint disable=unnecessary-lambda
+    df_unprocessed["kVp other pulses"] = (  # pylint disable=unnecessary-lambda
         df_unprocessed[df_unprocessed["kVp"].notnull()]
         .drop_duplicates(["Acquisition pk", "kVp pk"])
         .sort_values(by=["kVp pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"])["kVp"]
         .transform(lambda x: " | ".join(map("{:.2f}".format, x[1:])))  # pylint disable=unnecessary-lambda
     )
-    df_unprocessed["uAs Concatenated"] = (  # pylint disable=unnecessary-lambda
+    df_unprocessed["uAs other pulses"] = (  # pylint disable=unnecessary-lambda
         df_unprocessed[df_unprocessed["uAs"].notnull()]
         .drop_duplicates(["Acquisition pk", "exposure pk"])
         .sort_values(by=["exposure pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"])["uAs"]
         .transform(lambda x: " | ".join(map(str, x[1:])))  # pylint disable=unnecessary-lambda
     )
-    df_unprocessed["ms Concatenated"] = (  # pylint disable=unnecessary-lambda
+    df_unprocessed["ms other pulses"] = (  # pylint disable=unnecessary-lambda
         df_unprocessed[df_unprocessed["ms"].notnull()]
         .drop_duplicates(["Acquisition pk", "pulsewidth pk"])
         .sort_values(by=["pulsewidth pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"])["ms"]
         .transform(lambda x: " | ".join(map("{:.2f}".format, x[1:])))  # pylint disable=unnecessary-lambda
     )
-    df_unprocessed["mA Concatenated"] = (  # pylint disable=unnecessary-lambda
+    df_unprocessed["mA other pulses"] = (  # pylint disable=unnecessary-lambda
         df_unprocessed[df_unprocessed["mA"].notnull()]
         .drop_duplicates(["Acquisition pk", "xraytubecurrent pk"])
         .sort_values(by=["xraytubecurrent pk"], ascending=[True], inplace=False)
