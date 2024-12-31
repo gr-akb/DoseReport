@@ -1604,7 +1604,7 @@ def write_out_data_as_chunks(
 
             if modality in ["MG"]:
                 df_unprocessed = create_image_view_modifier_column(df_unprocessed)
-                df_unprocessed = create_mg_pulse_columns(df_unprocessed)
+                df_unprocessed, acquisition_val_field_names = create_mg_pulse_columns(df_unprocessed, acquisition_val_field_names)
                 df_unprocessed = create_target_column(df_unprocessed)
 
             if modality in ["DX", "MG"]:
@@ -1964,7 +1964,7 @@ def create_image_view_modifier_column(df_unprocessed):
     return df_unprocessed
 
 
-def create_mg_pulse_columns(df_unprocessed):
+def create_mg_pulse_columns(df_unprocessed, acquisition_val_field_names):
     df_unprocessed["kVp other pulses"] = (  # pylint disable=unnecessary-lambda
         df_unprocessed[df_unprocessed["kVp"].notnull()]
         .drop_duplicates(["Acquisition pk", "kVp pk"])
@@ -2023,7 +2023,7 @@ def create_mg_pulse_columns(df_unprocessed):
             .drop_duplicates(["Acquisition pk", pk_name])
             .sort_values(by=[pk_name], ascending=[True], inplace=False)
             .loc[locations]
-            .groupby(["Acquisition pk"])[mean_field].mean()
+            .groupby(["Acquisition pk"])[mean_field].mean().round(2)
         )
 
         # Set the index of df_unprocessed so that when we insert the mean_data (which has fewer rows than
@@ -2031,34 +2031,35 @@ def create_mg_pulse_columns(df_unprocessed):
         df_unprocessed = df_unprocessed.set_index(["Acquisition pk"])
 
         # Add the mean_data to df_unprocessed.
-        df_unprocessed[f"{mean_field} Mean"] = mean_data
+        df_unprocessed[f"{mean_field} mean other pulses"] = mean_data
 
         # Reset the index of df_unprocessed.
         df_unprocessed = df_unprocessed.reset_index()
     #######################################################
 
-    df_unprocessed["kVp"] = (
+    # write the first pulse data for kVp, uAs, ms, and mA into new data frame columns
+    df_unprocessed["kVp first pulse"] = (
         df_unprocessed[df_unprocessed["kVp"].notnull()]
         .drop_duplicates(["Acquisition pk", "kVp pk"])
         .sort_values(by=["kVp pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"])["kVp"]
         .transform("first")
     )
-    df_unprocessed["uAs"] = (
+    df_unprocessed["uAs first pulse"] = (
         df_unprocessed[df_unprocessed["uAs"].notnull()]
         .drop_duplicates(["Acquisition pk", "exposure pk"])
         .sort_values(by=["exposure pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"])["uAs"]
         .transform("first")
     )
-    df_unprocessed["ms"] = (
+    df_unprocessed["ms first pulse"] = (
         df_unprocessed[df_unprocessed["ms"].notnull()]
         .drop_duplicates(["Acquisition pk", "pulsewidth pk"])
         .sort_values(by=["pulsewidth pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"])["ms"]
         .transform("first")
     )
-    df_unprocessed["mA"] = (
+    df_unprocessed["mA first pulse"] = (
         df_unprocessed[df_unprocessed["mA"].notnull()]
         .drop_duplicates(["Acquisition pk", "xraytubecurrent pk"])
         .sort_values(by=["xraytubecurrent pk"], ascending=[True], inplace=False)
@@ -2066,7 +2067,19 @@ def create_mg_pulse_columns(df_unprocessed):
         .transform("first")
     )
 
-    return df_unprocessed
+    # Remove the original kVp, uAs, ms, and mA columns - they are redundant now because we created new
+    # columns in the code above of the format "kVp first pulse".
+    df_unprocessed.drop(columns=["kVp", "uAs", "ms", "mA"], inplace=True)
+
+    # Also need to remove the "kVp", "uAs", "ms" and "mA" fields from acquisition_val_field_names
+    # because we've replaced these column names with ones of the format "kVp first pulse", making
+    # the originals redundant.
+    fields_to_remove = ["kVp", "uAs", "ms", "mA"]
+    for field_name in fields_to_remove:
+        if field_name in acquisition_val_field_names:
+            acquisition_val_field_names.remove(field_name)
+
+    return df_unprocessed, acquisition_val_field_names
 
 
 def create_target_column(df_unprocessed):
