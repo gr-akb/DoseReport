@@ -158,6 +158,8 @@ def _mg_get_series_data(event):
                 source_data.pulsewidth_set.values_list("pulse_width", flat=True)
             )
         )
+        if not exposure_time:
+            exposure_time = source_data.exposure_time
         average_glandular_dose = source_data.average_glandular_dose
         try:
             filters, filter_thicknesses = get_xray_filter_info(source_data)
