@@ -144,8 +144,8 @@ def _mg_get_series_data(event):
         exposure_control_mode = source_data.exposure_control_mode
         anode_target_material = get_anode_target_material(source_data)
         focal_spot_size = source_data.focal_spot_size
-        average_xray_tube_current = source_data.average_xray_tube_current
-        exposure_time = source_data.exposure_time
+        average_xray_tube_current = " | ".join("{:.2f}".format(i) for i in list(source_data.xraytubecurrent_set.values_list("xray_tube_current", flat=True)))
+        exposure_time = " | ".join("{:.2f}".format(i) for i in list(source_data.pulsewidth_set.values_list("pulse_width", flat=True)))
         average_glandular_dose = source_data.average_glandular_dose
         try:
             filters, filter_thicknesses = get_xray_filter_info(source_data)
@@ -153,11 +153,11 @@ def _mg_get_series_data(event):
             filters = None
             filter_thicknesses = None
         try:
-            kvp = source_data.kvp_set.get().kvp
+            kvp = " | ".join("{:.2f}".format(i) for i in list(source_data.kvp_set.values_list("kvp", flat=True)))
         except ObjectDoesNotExist:
             kvp = None
         try:
-            exposure = source_data.exposure_set.get().exposure
+            exposure = " | ".join("{:.2f}".format(i) for i in list(source_data.exposure_set.values_list("exposure", flat=True)))
         except ObjectDoesNotExist:
             exposure = None
     except ObjectDoesNotExist:
