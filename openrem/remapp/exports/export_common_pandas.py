@@ -2027,7 +2027,7 @@ def create_mg_pulse_columns(df_unprocessed, acquisition_val_field_names):
             .loc[locations]
             .groupby(["Acquisition pk"])[mean_field]
             .mean()
-            .round(2)
+            .apply(lambda x: round(x, 2))
         )
 
         # Set the index of df_unprocessed so that when we insert the mean_data (which has fewer rows than
