@@ -182,14 +182,20 @@ def create_dataframe(
         df[date_field] = pd.to_datetime(df[date_field], format="%Y-%m-%d")
 
     # Character wrap the system and name fields
+    # First make the column "string" dtype rather than "category" dtype because otherwise
+    # the df.update line fails if the word-wrapping has changed any of the entries.
+    if isinstance(df["x_ray_system_name"].dtype, pd.CategoricalDtype):
+        df["x_ray_system_name"] = df["x_ray_system_name"].astype("string")
     df.update(
         df["x_ray_system_name"].apply(
             lambda x: (textwrap.fill(x, char_wrap)).replace("\n", "<br>")
         )
     )
-
     df["x_ray_system_name"] = df["x_ray_system_name"].astype("category")
+
     for field in field_dict["names"]:
+        if isinstance(df[field].dtype, pd.CategoricalDtype):
+            df[field] = df[field].astype("string")
         df.update(
             df[field].apply(
                 lambda x: (textwrap.fill(x, char_wrap)).replace("\n", "<br>")
