@@ -5,6 +5,7 @@ OpenREM version history
 
 1.0.0b2 (2023-04-20)
 --------------------
+* :issue:`1045`  Charts: fixed bug where word-wrapping caused charts to fail if using python 3.12 and pandas 2.2.2
 * :issue:`1037`  Imports: removed blocking behaviour import tasks
 * :issue:`1036`  Docker: enabled Orthanc container to access VIRTUAL_DIRECTORY env variable in .env.prod
 * :issue:`1035`  DICOM Networking: fixed calling abort bool as function
