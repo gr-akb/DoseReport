@@ -709,7 +709,9 @@ def export_abort(request, pk):
     if request.user.groups.filter(name="exportgroup"):
         terminate_background(task)
         export_task.delete()
-        logger.info(f"Export task {export_task.task_id} terminated from the Exports interface")
+        logger.info(
+            f"Export task {export_task.task_id} terminated from the Exports interface"
+        )
 
     return HttpResponseRedirect(reverse_lazy("export"))
 

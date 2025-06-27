@@ -68,9 +68,7 @@ from ..tools.check_standard_name_status import are_standard_names_enabled
 logger = logging.getLogger(__name__)
 
 
-def text_and_date_formats(
-    book, sheet, pid=False, name=None, patid=None, modality=None
-):
+def text_and_date_formats(book, sheet, pid=False, name=None, patid=None, modality=None):
     """
     Function to write out the headings common to each sheet and modality and format the date, time, patient ID and
     accession number columns.
@@ -90,9 +88,9 @@ def text_and_date_formats(
     textformat = book.add_format({"num_format": "@"})
     dateformat = book.add_format({"num_format": settings.XLSX_DATE})
     timeformat = book.add_format({"num_format": settings.XLSX_TIME})
-    #datetimeformat = book.add_format(
+    # datetimeformat = book.add_format(
     #    {"num_format": f"{settings.XLSX_DATE} {settings.XLSX_TIME}"}
-    #)
+    # )
 
     date_column = 10
 
@@ -238,8 +236,8 @@ def get_patient_study_data(exam):
         patient_weight = patient_study_module.patient_weight
     except ObjectDoesNotExist:
         logger.debug(
-            f"Export {exam.modality_type}; patientstudymoduleattr_set object does not exist." +
-            f" AccNum {exam.accession_number}, Date {exam.study_date}"
+            f"Export {exam.modality_type}; patientstudymoduleattr_set object does not exist."
+            + f" AccNum {exam.accession_number}, Date {exam.study_date}"
         )
     return {
         "patient_age_decimal": patient_age_decimal,
@@ -282,8 +280,8 @@ def get_common_data(modality, exams, pid=None, name=None, patid=None):
                 patient_id = patient_module.patient_id
     except ObjectDoesNotExist:
         logger.debug(
-            f"Export {modality}; patientmoduleattr_set object does not exist." +
-            f" AccNum {exams.accession_number}, Date {exams.study_date}"
+            f"Export {modality}; patientmoduleattr_set object does not exist."
+            + f" AccNum {exams.accession_number}, Date {exams.study_date}"
         )
 
     institution_name = None
@@ -301,14 +299,14 @@ def get_common_data(modality, exams, pid=None, name=None, patid=None):
             display_name = equipment_module.unique_equipment_name.display_name
         except AttributeError:
             logger.debug(
-                f"Export {modality}; unique_equipment_name object does not exist." +
-                f" AccNum {exams.accession_number}, Date {exams.study_date}"
+                f"Export {modality}; unique_equipment_name object does not exist."
+                + f" AccNum {exams.accession_number}, Date {exams.study_date}"
             )
 
     except ObjectDoesNotExist:
         logger.debug(
-            f"Export {modality}; generalequipmentmoduleattr_set object does not exist." +
-            f" AccNum {exams.accession_number}, Date {exams.study_date}"
+            f"Export {modality}; generalequipmentmoduleattr_set object does not exist."
+            + f" AccNum {exams.accession_number}, Date {exams.study_date}"
         )
 
     patient_study_data = get_patient_study_data(exams)
@@ -328,13 +326,13 @@ def get_common_data(modality, exams, pid=None, name=None, patid=None):
                 event_count = int(ct_accumulated.total_number_of_irradiation_events)
             except TypeError:
                 logger.debug(
-                    "Export CT; couldn't get number of irradiation events." +
-                    f" AccNum {exams.accession_number}, Date {exams.study_date}"
+                    "Export CT; couldn't get number of irradiation events."
+                    + f" AccNum {exams.accession_number}, Date {exams.study_date}"
                 )
         except ObjectDoesNotExist:
             logger.debug(
-                "Export CT; ctradiationdose_set object does not exist." +
-                f" AccNum {exams.accession_number}, Date {exams.study_date}"
+                "Export CT; ctradiationdose_set object does not exist."
+                + f" AccNum {exams.accession_number}, Date {exams.study_date}"
             )
 
     elif modality in "DX":
@@ -353,8 +351,8 @@ def get_common_data(modality, exams, pid=None, name=None, patid=None):
                 cgycm2 = None
         except ObjectDoesNotExist:
             logger.debug(
-                "Export DX; projectionxrayradiationdose_set object does not exist." +
-                f" AccNum {exams.accession_number}, Date {exams.study_date}"
+                "Export DX; projectionxrayradiationdose_set object does not exist."
+                + f" AccNum {exams.accession_number}, Date {exams.study_date}"
             )
     elif modality in ["RF", "MG"]:
         try:
@@ -690,9 +688,7 @@ def write_export(task, filename, temp_file, datestamp):
     task.save()
 
 
-def create_summary_sheet(
-    task, studies, book, summary_sheet, modality=None
-):
+def create_summary_sheet(task, studies, book, summary_sheet, modality=None):
     # pylint: disable=too-many-locals
     # pylint: disable=too-many-statements
     """Create summary sheet for xlsx exports
@@ -714,7 +710,9 @@ def create_summary_sheet(
     titleformat.set_font_size = 22
     titleformat.set_font_color = "#FF0000"
     titleformat.set_bold()
-    toplinestring = f"XLSX Export from OpenREM version {version} on {str(datetime.datetime.now())}"
+    toplinestring = (
+        f"XLSX Export from OpenREM version {version} on {str(datetime.datetime.now())}"
+    )
     linetwostring = (
         "OpenREM is copyright 2019 The Royal Marsden NHS Foundation Trust, and available under the GPL. "
         "See http://openrem.org"
@@ -1475,7 +1473,9 @@ def export_using_pandas(
     book.close()
     tsk.progress = "XLSX book written."
     tsk.save()
-    xlsxfilename = f"{modality.lower()}export{datestamp.strftime('%Y%m%d-%H%M%S%f')}.xlsx"
+    xlsxfilename = (
+        f"{modality.lower()}export{datestamp.strftime('%Y%m%d-%H%M%S%f')}.xlsx"
+    )
     write_export(tsk, xlsxfilename, tmpxlsx, datestamp)
 
 
@@ -1604,7 +1604,9 @@ def write_out_data_as_chunks(
 
             if modality in ["MG"]:
                 df_unprocessed = create_image_view_modifier_column(df_unprocessed)
-                df_unprocessed = create_mg_pulse_columns(df_unprocessed)
+                df_unprocessed, acquisition_val_field_names = create_mg_pulse_columns(
+                    df_unprocessed, acquisition_val_field_names
+                )
                 df_unprocessed = create_target_column(df_unprocessed)
 
             if modality in ["DX", "MG"]:
@@ -1964,87 +1966,104 @@ def create_image_view_modifier_column(df_unprocessed):
     return df_unprocessed
 
 
-def create_mg_pulse_columns(df_unprocessed):
-    df_unprocessed["kVp Concatenated"] = (  # pylint disable=unnecessary-lambda
+def create_mg_pulse_columns(df_unprocessed, acquisition_val_field_names):
+    df_unprocessed["kVp other pulses"] = (  # pylint disable=unnecessary-lambda
         df_unprocessed[df_unprocessed["kVp"].notnull()]
         .drop_duplicates(["Acquisition pk", "kVp pk"])
         .sort_values(by=["kVp pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"])["kVp"]
-        .transform(lambda x: " | ".join(map(str, x)))  # pylint disable=unnecessary-lambda
+        .transform(lambda x: " | ".join(map("{:.2f}".format, x[1:])))  # pylint disable=unnecessary-lambda
     )
-    df_unprocessed["uAs Concatenated"] = (  # pylint disable=unnecessary-lambda
+    df_unprocessed["uAs other pulses"] = (  # pylint disable=unnecessary-lambda
         df_unprocessed[df_unprocessed["uAs"].notnull()]
         .drop_duplicates(["Acquisition pk", "exposure pk"])
         .sort_values(by=["exposure pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"])["uAs"]
-        .transform(lambda x: " | ".join(map(str, x)))  # pylint disable=unnecessary-lambda
+        .transform(lambda x: " | ".join(map(str, x[1:])))  # pylint disable=unnecessary-lambda
     )
-    df_unprocessed["ms Concatenated"] = (  # pylint disable=unnecessary-lambda
+    df_unprocessed["ms other pulses"] = (  # pylint disable=unnecessary-lambda
         df_unprocessed[df_unprocessed["ms"].notnull()]
         .drop_duplicates(["Acquisition pk", "pulsewidth pk"])
         .sort_values(by=["pulsewidth pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"])["ms"]
-        .transform(lambda x: " | ".join(map(str, x)))  # pylint disable=unnecessary-lambda
+        .transform(lambda x: " | ".join(map("{:.2f}".format, x[1:])))  # pylint disable=unnecessary-lambda
     )
-    df_unprocessed["mA Concatenated"] = (  # pylint disable=unnecessary-lambda
+    df_unprocessed["mA other pulses"] = (  # pylint disable=unnecessary-lambda
         df_unprocessed[df_unprocessed["mA"].notnull()]
         .drop_duplicates(["Acquisition pk", "xraytubecurrent pk"])
         .sort_values(by=["xraytubecurrent pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"])["mA"]
-        .transform(lambda x: " | ".join(map(str, x)))  # pylint disable=unnecessary-lambda
+        .transform(lambda x: " | ".join(map("{:.2f}".format, x[1:])))  # pylint disable=unnecessary-lambda
     )
 
-    df_unprocessed["kVp Mean"] = (
+    #######################################################
+    # Calculate the mean of the kVp, uAs, ms and mA for each pulse of an exposure, excluding the first
+    # pulse because we're going to assume that is the AEC pre-pulse, rather than part of the main exposure.
+    # This stackoverflow post was useful for this section:
+    # https://stackoverflow.com/questions/46938572/pandas-groupby-mean-into-a-dataframe
+    required_mean_field_dict = {
+        "kVp": "kVp pk",
+        "uAs": "exposure pk",
+        "ms": "pulsewidth pk",
+        "mA": "xraytubecurrent pk",
+    }
+
+    for mean_field, pk_name in required_mean_field_dict.items():
+
+        # The locations of the required entries, excluding the first entry for each exposure
+        locations = (
+            df_unprocessed.drop_duplicates(["Acquisition pk", pk_name])
+            .sort_values(by=[pk_name], ascending=[True], inplace=False)
+            .groupby(["Acquisition pk"])
+            .cumcount()
+            .ne(0)
+        )
+
+        # Calculate the mean of all pulses, excluding the first value
+        mean_data = (
+            df_unprocessed[df_unprocessed[mean_field].notnull()]
+            .drop_duplicates(["Acquisition pk", pk_name])
+            .sort_values(by=[pk_name], ascending=[True], inplace=False)
+            .loc[locations]
+            .groupby(["Acquisition pk"])[mean_field]
+            .mean()
+            .apply(lambda x: round(x, 2))
+        )
+
+        # Set the index of df_unprocessed so that when we insert the mean_data (which has fewer rows than
+        # df_unprocesed) it works correctly.
+        df_unprocessed = df_unprocessed.set_index(["Acquisition pk"])
+
+        # Add the mean_data to df_unprocessed.
+        df_unprocessed[f"{mean_field} mean other pulses"] = mean_data
+
+        # Reset the index of df_unprocessed.
+        df_unprocessed = df_unprocessed.reset_index()
+    #######################################################
+
+    # write the first pulse data for kVp, uAs, ms, and mA into new data frame columns
+    df_unprocessed["kVp first pulse"] = (
         df_unprocessed[df_unprocessed["kVp"].notnull()]
         .drop_duplicates(["Acquisition pk", "kVp pk"])
         .sort_values(by=["kVp pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"])["kVp"]
-        .transform("mean")
-    )
-    df_unprocessed["uAs Mean"] = (
-        df_unprocessed[df_unprocessed["uAs"].notnull()]
-        .drop_duplicates(["Acquisition pk", "exposure pk"])
-        .sort_values(by=["exposure pk"], ascending=[True], inplace=False)
-        .groupby(["Acquisition pk"])["uAs"]
-        .transform("mean")
-    )
-    df_unprocessed["ms Mean"] = (
-        df_unprocessed[df_unprocessed["ms"].notnull()]
-        .drop_duplicates(["Acquisition pk", "pulsewidth pk"])
-        .sort_values(by=["pulsewidth pk"], ascending=[True], inplace=False)
-        .groupby(["Acquisition pk"])["ms"]
-        .transform("mean")
-    )
-    df_unprocessed["mA Mean"] = (
-        df_unprocessed[df_unprocessed["mA"].notnull()]
-        .drop_duplicates(["Acquisition pk", "xraytubecurrent pk"])
-        .sort_values(by=["xraytubecurrent pk"], ascending=[True], inplace=False)
-        .groupby(["Acquisition pk"])["mA"]
-        .transform("mean")
-    )
-
-    df_unprocessed["kVp"] = (
-        df_unprocessed[df_unprocessed["kVp"].notnull()]
-        .drop_duplicates(["Acquisition pk", "kVp pk"])
-        .sort_values(by=["kVp pk"], ascending=[True], inplace=False)
-        .groupby(["Acquisition pk"])["kVp"]
         .transform("first")
     )
-    df_unprocessed["uAs"] = (
+    df_unprocessed["uAs first pulse"] = (
         df_unprocessed[df_unprocessed["uAs"].notnull()]
         .drop_duplicates(["Acquisition pk", "exposure pk"])
         .sort_values(by=["exposure pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"])["uAs"]
         .transform("first")
     )
-    df_unprocessed["ms"] = (
+    df_unprocessed["ms first pulse"] = (
         df_unprocessed[df_unprocessed["ms"].notnull()]
         .drop_duplicates(["Acquisition pk", "pulsewidth pk"])
         .sort_values(by=["pulsewidth pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"])["ms"]
         .transform("first")
     )
-    df_unprocessed["mA"] = (
+    df_unprocessed["mA first pulse"] = (
         df_unprocessed[df_unprocessed["mA"].notnull()]
         .drop_duplicates(["Acquisition pk", "xraytubecurrent pk"])
         .sort_values(by=["xraytubecurrent pk"], ascending=[True], inplace=False)
@@ -2052,7 +2071,19 @@ def create_mg_pulse_columns(df_unprocessed):
         .transform("first")
     )
 
-    return df_unprocessed
+    # Remove the original kVp, uAs, ms, and mA columns - they are redundant now because we created new
+    # columns in the code above of the format "kVp first pulse".
+    df_unprocessed.drop(columns=["kVp", "uAs", "ms", "mA"], inplace=True)
+
+    # Also need to remove the "kVp", "uAs", "ms" and "mA" fields from acquisition_val_field_names
+    # because we've replaced these column names with ones of the format "kVp first pulse", making
+    # the originals redundant.
+    fields_to_remove = ["kVp", "uAs", "ms", "mA"]
+    for field_name in fields_to_remove:
+        if field_name in acquisition_val_field_names:
+            acquisition_val_field_names.remove(field_name)
+
+    return df_unprocessed, acquisition_val_field_names
 
 
 def create_target_column(df_unprocessed):
