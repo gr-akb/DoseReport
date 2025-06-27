@@ -1755,7 +1755,10 @@ class StandardNameFormCT(StandardNameFormBase):
 
         field_name, label_name = ("acquisition_protocol", "Acquisition protocol name")
         items_to_exclude = (
-            StandardNames.objects.all().values(field_name).exclude(**{field_name: None})
+            StandardNames.objects.all()
+            .filter(modality="CT")
+            .values(field_name)
+            .exclude(**{field_name: None})
         )
         if "standard_name" in self.initial:
             items_to_exclude = items_to_exclude.exclude(
@@ -1872,7 +1875,10 @@ class StandardNameFormDX(StandardNameFormBase):
         )
         field_name, label_name = ("acquisition_protocol", "Acquisition protocol name")
         items_to_exclude = (
-            StandardNames.objects.all().values(field_name).exclude(**{field_name: None})
+            StandardNames.objects.all()
+            .filter(modality="DX")
+            .values(field_name)
+            .exclude(**{field_name: None})
         )
         if "standard_name" in self.initial:
             items_to_exclude = items_to_exclude.exclude(
@@ -1988,7 +1994,10 @@ class StandardNameFormMG(StandardNameFormBase):
         )
         field_name, label_name = ("acquisition_protocol", "Acquisition protocol name")
         items_to_exclude = (
-            StandardNames.objects.all().values(field_name).exclude(**{field_name: None})
+            StandardNames.objects.all()
+            .filter(modality="MG")
+            .values(field_name)
+            .exclude(**{field_name: None})
         )
         if "standard_name" in self.initial:
             items_to_exclude = items_to_exclude.exclude(
@@ -2104,7 +2113,10 @@ class StandardNameFormRF(StandardNameFormBase):
         )
         field_name, label_name = ("acquisition_protocol", "Acquisition protocol name")
         items_to_exclude = (
-            StandardNames.objects.all().values(field_name).exclude(**{field_name: None})
+            StandardNames.objects.all()
+            .filter(modality="RF")
+            .values(field_name)
+            .exclude(**{field_name: None})
         )
         if "standard_name" in self.initial:
             items_to_exclude = items_to_exclude.exclude(
