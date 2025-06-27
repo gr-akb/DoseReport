@@ -1240,6 +1240,7 @@ class ImportSiemensDX(TestCase):
             0.2,
         )
 
+
 class ImportDRGEMDX(TestCase):
     def setUp(self):
         """
@@ -1264,4 +1265,3 @@ class ImportDRGEMDX(TestCase):
 
         # Test that one study have been imported
         self.assertEqual(studies.count(), 1)
-

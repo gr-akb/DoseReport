@@ -771,9 +771,7 @@ def exportNM2excel(filterdict, pid=False, name=None, patid=None, user=None):
         for i, study_description in enumerate(study_descriptions):
             study_description, current_data = study_description
             current_sheet = book.add_worksheet(sheet_name(study_description))
-            book = text_and_date_formats(
-                book, current_sheet, pid, name, patid, "NM"
-            )
+            book = text_and_date_formats(book, current_sheet, pid, name, patid, "NM")
             _write_nm_excel_sheet(
                 task,
                 current_sheet,

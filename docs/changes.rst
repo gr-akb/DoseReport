@@ -6,9 +6,11 @@ OpenREM version history
 1.0.0b2 (2023-04-20)
 --------------------
 * :issue:`1045`  Charts: fixed bug where word-wrapping caused charts to fail if using python 3.12 and pandas 2.2.2
+* :issue:`1044`  Interface: now filtering unmapped acquisition protocols using the modality when creating or modifying a standard name
 * :issue:`1037`  Imports: removed blocking behaviour import tasks
 * :issue:`1036`  Docker: enabled Orthanc container to access VIRTUAL_DIRECTORY env variable in .env.prod
 * :issue:`1035`  DICOM Networking: fixed calling abort bool as function
+* :issue:`1034`  Exports: write out per-pulse event detail data for mammo exports
 * :issue:`1033`  Imports: enables imports of DX with decimal values in integer exposure fields
 * :issue:`1032`  Tests: re-enables sonarcloud integration
 * :issue:`1016`  Imports: fixed error where only the first exposure in a DX or MG study was checked for standard acquisition name
