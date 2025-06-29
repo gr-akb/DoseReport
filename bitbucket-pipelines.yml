@@ -32,7 +32,7 @@ definitions:
         caches:
           - sonar
         script:
-          - pipe: sonarsource/sonarcloud-scan:2.0.0
+          - pipe: sonarsource/sonarcloud-scan:4.1.0
     - step: &sonarcloudqualitygate
         name: run sonarcloud quality gate
         caches:
