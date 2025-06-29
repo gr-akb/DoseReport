@@ -38,7 +38,7 @@ definitions:
         caches:
           - sonar
         script:
-          - pipe: sonarsource/sonarcloud-quality-gate:0.1.6
+          - pipe: sonarsource/sonarcloud-quality-gate:1.2.1
     - step: &test
         name: run django tests except slow tags  # excludes tests tagged as slow
         script:
