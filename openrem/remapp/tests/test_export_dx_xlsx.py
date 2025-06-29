@@ -89,6 +89,7 @@ class ExportDXxlsx(TestCase):
         self.assertEqual(
             all_data_sheet.cell(row=2, column=accession_number_col).value, "00938475"
         )
+        # See https://bitbucket.org/openrem/openrem/issues/1047/dxxlsx-export-test-fails-sometimes-due-to
         # self.assertAlmostEqual(
         #     all_data_sheet.cell(row=2, column=exposure_index_col).value,
         #     51.745061,
