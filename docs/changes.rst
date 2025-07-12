@@ -13,6 +13,7 @@ OpenREM version history
 * :issue:`1034`  Exports: write out per-pulse event detail data for mammo exports
 * :issue:`1033`  Imports: enables imports of DX with decimal values in integer exposure fields
 * :issue:`1032`  Tests: re-enables sonarcloud integration
+* :issue:`1028`  Exports: fixed delete of export where task does not exist
 * :issue:`1016`  Imports: fixed error where only the first exposure in a DX or MG study was checked for standard acquisition name
 * :issue:`1015`  Exports: enabled export of NM studies
 * :issue:`1009`  Tasks: handles abort where more than one task has the same ID

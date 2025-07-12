@@ -703,16 +703,17 @@ def export_abort(request, pk):
     :param request: Contains the task primary key
     :type request: POST
     """
-    export_task = get_object_or_404(Exports, pk=pk)
-    task = get_object_or_404(BackgroundTask, uuid=export_task.task_id)
-
-    if request.user.groups.filter(name="exportgroup"):
-        terminate_background(task)
+    if pk and request.user.groups.filter(name="exportgroup"):
+        export_task = get_object_or_404(Exports, pk=pk)
+        try:
+            task = BackgroundTask.objects.get(uuid=export_task.task_id)
+            terminate_background(task)
+        except ObjectDoesNotExist:
+            pass
         export_task.delete()
         logger.info(
             f"Export task {export_task.task_id} terminated from the Exports interface"
         )
-
     return HttpResponseRedirect(reverse_lazy("export"))
 
 
