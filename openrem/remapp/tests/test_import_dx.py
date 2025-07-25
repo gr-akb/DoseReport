@@ -950,15 +950,20 @@ class ImportCarestreamDR7500(TestCase):
         All three images within this study should have the standard study name "AbdoView".
         :return: None
         """
-        study = GeneralStudyModuleAttr.objects.filter(procedure_code_meaning="ABD_1_VIEW")[0]
+        study = GeneralStudyModuleAttr.objects.filter(
+            procedure_code_meaning="ABD_1_VIEW"
+        )[0]
 
-        irradiations = study.projectionxrayradiationdose_set.get().irradeventxraydata_set.all()
+        irradiations = (
+            study.projectionxrayradiationdose_set.get().irradeventxraydata_set.all()
+        )
 
         for irradiation in irradiations:
             std_acq_names = irradiation.standard_protocols.all()
 
             for std_acq_name in std_acq_names:
                 self.assertEqual(std_acq_name.standard_name, "AbdoView")
+
 
 class ImportCarestreamDRXRevolution(TestCase):
     def setUp(self):
@@ -1234,3 +1239,29 @@ class ImportSiemensDX(TestCase):
             ),
             0.2,
         )
+
+
+class ImportDRGEMDX(TestCase):
+    def setUp(self):
+        """
+        Imports a known radigraphic image file derived from a DRGEM DIAMOND image.
+        """
+
+        pid = PatientIDSettings.objects.create()
+        pid.name_stored = True
+        pid.name_hashed = False
+        pid.id_stored = True
+        pid.id_hashed = False
+        pid.dob_stored = True
+        pid.save()
+
+        dx_drgem = os.path.join("test_files", "DX-Im-DRGEM.dcm")
+        root_tests = os.path.dirname(os.path.abspath(__file__))
+        dx.dx(os.path.join(root_tests, dx_drgem))
+
+    def test_drgem_dx_exposure_data(self):
+        """Check exposure information is extracted"""
+        studies = GeneralStudyModuleAttr.objects.order_by("id")
+
+        # Test that one study have been imported
+        self.assertEqual(studies.count(), 1)

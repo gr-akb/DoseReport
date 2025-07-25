@@ -5,10 +5,22 @@ OpenREM version history
 
 1.0.0b2 (2023-04-20)
 --------------------
+* :issue:`1045`  Charts: fixed bug where word-wrapping caused charts to fail if using python 3.12 and pandas 2.2.2
+* :issue:`1044`  Interface: now filtering unmapped acquisition protocols using the modality when creating or modifying a standard name
+* :issue:`1037`  Imports: removed blocking behaviour import tasks
+* :issue:`1036`  Docker: enabled Orthanc container to access VIRTUAL_DIRECTORY env variable in .env.prod
+* :issue:`1035`  DICOM Networking: fixed calling abort bool as function
+* :issue:`1034`  Exports: write out per-pulse event detail data for mammo exports
+* :issue:`1033`  Imports: enables imports of DX with decimal values in integer exposure fields
+* :issue:`1032`  Tests: re-enables sonarcloud integration
+* :issue:`1028`  Exports: fixed delete of export where task does not exist
 * :issue:`1016`  Imports: fixed error where only the first exposure in a DX or MG study was checked for standard acquisition name
+* :issue:`1015`  Exports: enabled export of NM studies
+* :issue:`1009`  Tasks: handles abort where more than one task has the same ID
 * :issue:`1006`  Imports: fixing error if a DX file tag has the wrong length
 * :issue:`1007`  SkinDose: made skin dose calculations a background task in all situations
 * :issue:`1003`  Orthanc: modified Windows command to reduce memory use when querying PACS
+* :issue:`1001`  Imports: enabling larger file uploads with Nginx
 * :issue:`1000`  Interface: fixed incorrect study date ordering on home page hyperlinks and tests
 * :issue:`995`  SkinDose: fixed bug where a missing exposure_time causes an invalid decimal operation
 * :issue:`993`  Imports: added check that file exists before reading in ct_philips, dx, mam, nm_image and rdsr extractors

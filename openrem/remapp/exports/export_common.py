@@ -41,11 +41,14 @@ from django.core.files.base import ContentFile
 from django.db.models import Q
 from xlsxwriter.workbook import Workbook
 
-from remapp.models import (
+from ..models import (
     Exports,
     StandardNames,
-    StandardNameSettings,
 )
+
+from ..tools.check_standard_name_status import are_standard_names_enabled
+
+from ..version import __version__
 
 logger = logging.getLogger(__name__)
 
@@ -130,13 +133,7 @@ def common_headers(modality=None, pid=False, name=None, patid=None):
     """
 
     # Obtain the system-level enable_standard_names setting
-    try:
-        StandardNameSettings.objects.get()
-    except ObjectDoesNotExist:
-        StandardNameSettings.objects.create()
-    enable_standard_names = StandardNameSettings.objects.values_list(
-        "enable_standard_names", flat=True
-    )[0]
+    enable_standard_names = are_standard_names_enabled()
 
     pid_headings = []
     if pid and name:
@@ -220,13 +217,7 @@ def generate_sheets(
     :return: book
     """
     # Obtain the system-level enable_standard_names setting
-    try:
-        StandardNameSettings.objects.get()
-    except ObjectDoesNotExist:
-        StandardNameSettings.objects.create()
-    enable_standard_names = StandardNameSettings.objects.values_list(
-        "enable_standard_names", flat=True
-    )[0]
+    enable_standard_names = are_standard_names_enabled()
 
     sheet_list = {}
     protocols_list = []
@@ -336,13 +327,7 @@ def get_common_data(modality, exams, pid=None, name=None, patid=None):
     """
 
     # Obtain the system-level enable_standard_names setting
-    try:
-        StandardNameSettings.objects.get()
-    except ObjectDoesNotExist:
-        StandardNameSettings.objects.create()
-    enable_standard_names = StandardNameSettings.objects.values_list(
-        "enable_standard_names", flat=True
-    )[0]
+    enable_standard_names = are_standard_names_enabled()
 
     patient_birth_date = None
     patient_name = None
@@ -773,18 +758,17 @@ def create_summary_sheet(
     :param book: xlsxwriter book to work on
     :param summary_sheet: worksheet object
     :param sheet_list: list of sheet names
+    :param has_series_protocol: if series protocols exist
     :return: nothing
     """
     import datetime
-    import pkg_resources
     from django.db.models import Count
 
     # Populate summary sheet
     task.progress = "Now populating the summary sheet..."
     task.save()
 
-    vers = pkg_resources.require("openrem")[0].version
-    version = vers
+    version = __version__
     titleformat = book.add_format()
     titleformat.set_font_size = 22
     titleformat.set_font_color = "#FF0000"
@@ -825,6 +809,7 @@ def create_summary_sheet(
         summary_sheet.write(row + 6, 4, item["n"])
     summary_sheet.set_column("D:D", 25)
 
+    sorted_protocols = None
     # Generate list of Series Protocols
     if has_series_protocol:
         summary_sheet.write(5, 6, "Series Protocol")
@@ -848,13 +833,7 @@ def create_summary_sheet(
         summary_sheet.set_column("G:G", 15)
 
     # Obtain the system-level enable_standard_names setting
-    try:
-        StandardNameSettings.objects.get()
-    except ObjectDoesNotExist:
-        StandardNameSettings.objects.create()
-    enable_standard_names = StandardNameSettings.objects.values_list(
-        "enable_standard_names", flat=True
-    )[0]
+    enable_standard_names = are_standard_names_enabled()
 
     if enable_standard_names:
         # Generate list of standard study names
@@ -873,18 +852,19 @@ def create_summary_sheet(
 
         # Write standard acquisition names
         # Only include [standard] protocols
-        summary_sheet.write(5, 12, "Standard acquisition name")
-        summary_sheet.write(5, 13, "Frequency")
-        protocols = [
-            x
-            for x in sorted_protocols
-            if x[1]["protocolname"][0].startswith("[standard]")
-        ]
+        if sorted_protocols:
+            summary_sheet.write(5, 12, "Standard acquisition name")
+            summary_sheet.write(5, 13, "Frequency")
+            protocols = [
+                x
+                for x in sorted_protocols
+                if x[1]["protocolname"][0].startswith("[standard]")
+            ]
 
-        for row, item in enumerate(protocols):
-            summary_sheet.write(row + 6, 12, item[1]["protocolname"][0])
-            summary_sheet.write(row + 6, 13, item[1]["count"])
-        summary_sheet.set_column("M:M", 25)
+            for row, item in enumerate(protocols):
+                summary_sheet.write(row + 6, 12, item[1]["protocolname"][0])
+                summary_sheet.write(row + 6, 13, item[1]["count"])
+            summary_sheet.set_column("M:M", 25)
 
 
 def abort_if_zero_studies(num_studies, tsk):

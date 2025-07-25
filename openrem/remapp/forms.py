@@ -1646,9 +1646,9 @@ class DicomStoreForm(forms.ModelForm):
         }
         if settings.DOCKER_INSTALL:
             labels["peer"] = "Docker container name: initial default is orthanc_1"
-            labels[
-                "port"
-            ] = "Port: set to the same as the DICOM_PORT setting in docker-compose.yml"
+            labels["port"] = (
+                "Port: set to the same as the DICOM_PORT setting in docker-compose.yml"
+            )
 
 
 class StandardNameFormBase(forms.ModelForm):
@@ -1755,7 +1755,10 @@ class StandardNameFormCT(StandardNameFormBase):
 
         field_name, label_name = ("acquisition_protocol", "Acquisition protocol name")
         items_to_exclude = (
-            StandardNames.objects.all().values(field_name).exclude(**{field_name: None})
+            StandardNames.objects.all()
+            .filter(modality="CT")
+            .values(field_name)
+            .exclude(**{field_name: None})
         )
         if "standard_name" in self.initial:
             items_to_exclude = items_to_exclude.exclude(
@@ -1872,7 +1875,10 @@ class StandardNameFormDX(StandardNameFormBase):
         )
         field_name, label_name = ("acquisition_protocol", "Acquisition protocol name")
         items_to_exclude = (
-            StandardNames.objects.all().values(field_name).exclude(**{field_name: None})
+            StandardNames.objects.all()
+            .filter(modality="DX")
+            .values(field_name)
+            .exclude(**{field_name: None})
         )
         if "standard_name" in self.initial:
             items_to_exclude = items_to_exclude.exclude(
@@ -1988,7 +1994,10 @@ class StandardNameFormMG(StandardNameFormBase):
         )
         field_name, label_name = ("acquisition_protocol", "Acquisition protocol name")
         items_to_exclude = (
-            StandardNames.objects.all().values(field_name).exclude(**{field_name: None})
+            StandardNames.objects.all()
+            .filter(modality="MG")
+            .values(field_name)
+            .exclude(**{field_name: None})
         )
         if "standard_name" in self.initial:
             items_to_exclude = items_to_exclude.exclude(
@@ -2104,7 +2113,10 @@ class StandardNameFormRF(StandardNameFormBase):
         )
         field_name, label_name = ("acquisition_protocol", "Acquisition protocol name")
         items_to_exclude = (
-            StandardNames.objects.all().values(field_name).exclude(**{field_name: None})
+            StandardNames.objects.all()
+            .filter(modality="RF")
+            .values(field_name)
+            .exclude(**{field_name: None})
         )
         if "standard_name" in self.initial:
             items_to_exclude = items_to_exclude.exclude(
@@ -2250,7 +2262,6 @@ class NotPatientIDForm(forms.ModelForm):
 
 
 class SkinSafeListForm(forms.ModelForm):
-
     """Form for adding/updating/removing system from openSkin safe list"""
 
     class Meta(object):
