@@ -775,6 +775,21 @@ def dx_plot_calculations(f, user_profile, return_as_dict=False):
         )
         #######################################################################
 
+        #######################################################################
+        # Addressing issue 1050 (https://bitbucket.org/openrem/openrem/issues/1050)
+        # Filter data frame using acquisition protocol name and min / max event DAP filters
+        if f.data["event_dap_min"]:
+            df = df[df["projectionxrayradiationdose__irradeventxraydata__dose_area_product"] >= float(f.data["event_dap_min"])]
+
+        if f.data["event_dap_max"]:
+            df = df[df["projectionxrayradiationdose__irradeventxraydata__dose_area_product"] <= float(f.data["event_dap_max"])]
+
+        if f.data["projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"]:
+            df["projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"] = df["projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"].astype("object")
+            df = df[df["projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"].str.contains(f.data["projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"], case=False)]
+            df["projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"] = df["projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"].astype("category")
+        #######################################################################
+
         if user_profile.plotDXAcquisitionMeanDAP:
 
             name_field = (
