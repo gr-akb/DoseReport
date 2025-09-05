@@ -1057,7 +1057,7 @@ def transform_to_one_row_per_exam(
     df.drop_duplicates(subset="Acquisition pk", inplace=True)
 
     # Reformat the DataFrame so that we have one row per exam, with sets of columns for each acquisition data
-    g = df.groupby("pk").cumcount().add(1)
+    g = df.groupby("pk", observed=False).cumcount().add(1)
     exam_field_names = (
         exam_cat_f_names
         + exam_obj_field_names
@@ -1096,7 +1096,7 @@ def create_standard_name_df_columns(df):
 
     if num_std_names:
         std_name_df = (
-            df.groupby("pk")["Standard study name"]
+            df.groupby("pk", observed=False)["Standard study name"]
             .apply(lambda x: pd.Series(list(x.unique())))
             .unstack()
         )
@@ -1900,7 +1900,7 @@ def create_multiindex_columns(
     df_pivot = df_unprocessed_organ_dose.pivot_table(
         index="Acquisition pk",
         fill_value="",
-        columns=df_unprocessed_organ_dose.groupby("Acquisition pk").cumcount() + 1,
+        columns=df_unprocessed_organ_dose.groupby("Acquisition pk", observed=False).cumcount() + 1,
         values=secondary_field_names_list,
         aggfunc="first",
     )
@@ -1959,7 +1959,7 @@ def create_image_view_modifier_column(df_unprocessed):
         df_unprocessed[df_unprocessed["View Modifier"].notnull()]
         .drop_duplicates(["Acquisition pk", "View Modifier pk"])
         .sort_values(by=["Acquisition pk"], ascending=[True], inplace=False)
-        .groupby(["Acquisition pk"])["View Modifier"]
+        .groupby(["Acquisition pk"], observed=False)["View Modifier"]
         .transform(lambda x: ",".join(x))  # pylint disable=unnecessary-lambda
     )
 
@@ -1971,28 +1971,28 @@ def create_mg_pulse_columns(df_unprocessed, acquisition_val_field_names):
         df_unprocessed[df_unprocessed["kVp"].notnull()]
         .drop_duplicates(["Acquisition pk", "kVp pk"])
         .sort_values(by=["kVp pk"], ascending=[True], inplace=False)
-        .groupby(["Acquisition pk"])["kVp"]
+        .groupby(["Acquisition pk"], observed=False)["kVp"]
         .transform(lambda x: " | ".join(map("{:.2f}".format, x[1:])))  # pylint disable=unnecessary-lambda
     )
     df_unprocessed["uAs other pulses"] = (  # pylint disable=unnecessary-lambda
         df_unprocessed[df_unprocessed["uAs"].notnull()]
         .drop_duplicates(["Acquisition pk", "exposure pk"])
         .sort_values(by=["exposure pk"], ascending=[True], inplace=False)
-        .groupby(["Acquisition pk"])["uAs"]
+        .groupby(["Acquisition pk"], observed=False)["uAs"]
         .transform(lambda x: " | ".join(map(str, x[1:])))  # pylint disable=unnecessary-lambda
     )
     df_unprocessed["ms other pulses"] = (  # pylint disable=unnecessary-lambda
         df_unprocessed[df_unprocessed["ms"].notnull()]
         .drop_duplicates(["Acquisition pk", "pulsewidth pk"])
         .sort_values(by=["pulsewidth pk"], ascending=[True], inplace=False)
-        .groupby(["Acquisition pk"])["ms"]
+        .groupby(["Acquisition pk"], observed=False)["ms"]
         .transform(lambda x: " | ".join(map("{:.2f}".format, x[1:])))  # pylint disable=unnecessary-lambda
     )
     df_unprocessed["mA other pulses"] = (  # pylint disable=unnecessary-lambda
         df_unprocessed[df_unprocessed["mA"].notnull()]
         .drop_duplicates(["Acquisition pk", "xraytubecurrent pk"])
         .sort_values(by=["xraytubecurrent pk"], ascending=[True], inplace=False)
-        .groupby(["Acquisition pk"])["mA"]
+        .groupby(["Acquisition pk"], observed=False)["mA"]
         .transform(lambda x: " | ".join(map("{:.2f}".format, x[1:])))  # pylint disable=unnecessary-lambda
     )
 
@@ -2014,7 +2014,7 @@ def create_mg_pulse_columns(df_unprocessed, acquisition_val_field_names):
         locations = (
             df_unprocessed.drop_duplicates(["Acquisition pk", pk_name])
             .sort_values(by=[pk_name], ascending=[True], inplace=False)
-            .groupby(["Acquisition pk"])
+            .groupby(["Acquisition pk"], observed=False)
             .cumcount()
             .ne(0)
         )
@@ -2025,7 +2025,7 @@ def create_mg_pulse_columns(df_unprocessed, acquisition_val_field_names):
             .drop_duplicates(["Acquisition pk", pk_name])
             .sort_values(by=[pk_name], ascending=[True], inplace=False)
             .loc[locations]
-            .groupby(["Acquisition pk"])[mean_field]
+            .groupby(["Acquisition pk"], observed=False)[mean_field]
             .mean()
             .apply(lambda x: round(x, 2))
         )
@@ -2046,28 +2046,28 @@ def create_mg_pulse_columns(df_unprocessed, acquisition_val_field_names):
         df_unprocessed[df_unprocessed["kVp"].notnull()]
         .drop_duplicates(["Acquisition pk", "kVp pk"])
         .sort_values(by=["kVp pk"], ascending=[True], inplace=False)
-        .groupby(["Acquisition pk"])["kVp"]
+        .groupby(["Acquisition pk"], observed=False)["kVp"]
         .transform("first")
     )
     df_unprocessed["uAs first pulse"] = (
         df_unprocessed[df_unprocessed["uAs"].notnull()]
         .drop_duplicates(["Acquisition pk", "exposure pk"])
         .sort_values(by=["exposure pk"], ascending=[True], inplace=False)
-        .groupby(["Acquisition pk"])["uAs"]
+        .groupby(["Acquisition pk"], observed=False)["uAs"]
         .transform("first")
     )
     df_unprocessed["ms first pulse"] = (
         df_unprocessed[df_unprocessed["ms"].notnull()]
         .drop_duplicates(["Acquisition pk", "pulsewidth pk"])
         .sort_values(by=["pulsewidth pk"], ascending=[True], inplace=False)
-        .groupby(["Acquisition pk"])["ms"]
+        .groupby(["Acquisition pk"], observed=False)["ms"]
         .transform("first")
     )
     df_unprocessed["mA first pulse"] = (
         df_unprocessed[df_unprocessed["mA"].notnull()]
         .drop_duplicates(["Acquisition pk", "xraytubecurrent pk"])
         .sort_values(by=["xraytubecurrent pk"], ascending=[True], inplace=False)
-        .groupby(["Acquisition pk"])["mA"]
+        .groupby(["Acquisition pk"], observed=False)["mA"]
         .transform("first")
     )
 
@@ -2113,7 +2113,7 @@ def create_filter_columns(acquisition_cat_field_names, df_unprocessed):
         df_unprocessed[df_unprocessed["Filters"].notnull()]
         .drop_duplicates(["Acquisition pk", "Filter pk"])
         .sort_values(by=["Filter pk"], ascending=[True], inplace=False)
-        .groupby(["Acquisition pk"])["Filters"]
+        .groupby(["Acquisition pk"], observed=False)["Filters"]
         .transform(lambda x: " | ".join(x))  # pylint disable=unnecessary-lambda
     )
 
@@ -2130,7 +2130,7 @@ def create_filter_columns(acquisition_cat_field_names, df_unprocessed):
     df_unprocessed["Filter thicknesses (mm)"] = (  # pylint disable=unnecessary-lambda
         df_unprocessed.drop_duplicates(["Acquisition pk", "Filter pk"])
         .sort_values(by=["Filter pk"], ascending=[True], inplace=False)
-        .groupby(["Acquisition pk"])["Filter thicknesses (mm)"]
+        .groupby(["Acquisition pk"], observed=False)["Filter thicknesses (mm)"]
         .transform(lambda x: " | ".join(x))  # pylint disable=unnecessary-lambda
     )
 
