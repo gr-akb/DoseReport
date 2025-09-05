@@ -3,76 +3,173 @@ Diagram of system components
 
 .. graphviz::
 
-   digraph {
-      node [fixedsize=true width=2.0 height=0.75 fontsize=10 margin="0.0,0.0"];
+    digraph {
+
+      // Define global style settings
+      graph [pad="0.25", ranksep="0.5", nodesep="0.75" colorscheme=rdylbu10];
+      node [fixedsize=true width=2.5 height=1.0 fontsize=10 margin="0.0,0.0" shape="rectangle" style="filled, rounded, bold" fillcolor="#ffffff" fontname="Helvetica" colorscheme=rdylbu10];
+
+      // Reset the ranking
+      newrank=true;
+
+      // Force lines between boxes to be orthogonal
+      splines=ortho;
 
       // Define the things on the server
       subgraph cluster_server {
 
          label="OpenREM server";
-         tooltip="The server";
-         fontname="Helvetica-bold";
-         fontsize=16;
+         tooltip="OpenREM server";
+         fontname="Helvetica";
+         fontsize=14;
          style=filled;
-         color=lightgrey;
-         node [style=filled color=white];
+         color=5;
+         //node [style=filled color=white];
 
          // Define the nodes for the data storage, display and retrieval
-         webserver [label="Web server&sup1;" fontname="Helvetica" tooltip="Serve web pages to the user" shape="box"];
-         python_django [label="OpenREM\nDjango app" fontname="Helvetica" tooltip="Python web framework" shape="box"];
-         database [label="Database&sup3;" fontname="Helvetica" tooltip="Relational database management system" shape="parallelogram"];
-         skin_dose_map_data [label="Skin dose map\ndata calculation,\nstorage, retrieval" fontname="Helvetica" tooltip="Calculate, store and retrieve skin dose map data" shape="parallelogram"];
-         server_media_folder [label="Server file storage\n(Media Home folder)" fontname="Helvetica" tooltip="File storage on the server" shape="parallelogram"];
-         data_export [label="Data export to\nlocal file system" fontname="Helvetica" tooltip="Files are made available to the user via a web page URL" shape="box"];
+         webserver [fontsize="8" label=<
+         <FONT POINT-SIZE="10"><B>Webserver</B></FONT>
+         <BR ALIGN="CENTER" />
+         <BR ALIGN="CENTER" />See note 1 below
+         >];
+
+         python_django [fontsize="8" label=<
+         <FONT POINT-SIZE="10"><B>OpenREM</B></FONT>
+         <BR ALIGN="CENTER" />
+         <BR ALIGN="CENTER" />Python Django app
+         >];
+
+         database [fontsize="8" shape="cylinder" fillcolor=8 label=<
+         <FONT POINT-SIZE="10"><B>Database</B></FONT>
+         <BR ALIGN="CENTER" />
+         <BR ALIGN="CENTER" />See note 3 below
+         >];
+
+         python_task_queue [fontsize="8" label=<
+         <FONT POINT-SIZE="10"><B>Python task queue</B></FONT>
+         <BR ALIGN="CENTER" />
+         <BR ALIGN="CENTER" />Manages internal processes such
+         <BR ALIGN="CENTER" />as queries, imports, exports, and
+         <BR ALIGN="CENTER" />skin dose map calculation
+         >];
+
+         skin_dose_map_data [fontsize="8" shape="box" label=<
+         <FONT POINT-SIZE="10"><B>Skin dose mapping</B></FONT>
+         <BR ALIGN="CENTER" />
+         <BR ALIGN="CENTER" />Data calculation, storage
+         <BR ALIGN="CENTER" />and retrieval
+         >];
+
+         server_media_folder [fontsize="8" shape="folder" fillcolor=8 label=<
+         <FONT POINT-SIZE="10"><B>Server file storage</B></FONT>
+         >];
+
+         data_export [fontsize="8" shape="box" label=<
+         <FONT POINT-SIZE="10"><B>Data export</B></FONT>
+         <BR ALIGN="CENTER" />
+         <BR ALIGN="CENTER" />To server file system
+         <BR ALIGN="CENTER" />for user download
+         >];
 
          // Define the links between the data storage, display and retrieval
          webserver -> python_django [dir=both];
-         python_django -> database [dir=both label="via psycopg2\nPython adapter" fontsize=8 fontname="Courier"];
+         python_django -> database [dir=both];
+         python_django -> python_task_queue [dir=both];
+         python_task_queue -> skin_dose_map_data;
+         python_task_queue -> data_export;
          skin_dose_map_data -> server_media_folder [dir=both];
-         skin_dose_map_data -> python_django [style=dotted dir=both];
-         data_export -> server_media_folder;
-         data_export -> python_django [style=dotted dir=both];
+         //skin_dose_map_data -> python_django [style=dotted dir=both];
+         data_export -> server_media_folder [dir=both];
+         //data_export -> python_django [style=dotted dir=both];
 
          // Define the nodes for the DICOM store, database population and skin dose map calculation
-         conquest [label="DICOM StoreSCP&sup2;" fontname="Helvetica" tooltip="Conquest, acting as a DICOM storage SCP" shape="box"];
-         conquest_script [shape=diamond label="Does the\nobject contain\nuseful data?" fontname="Helvetica" tooltip="Process the rules in dicom.ini"];
-         populate_database [label="Extract information from\nthe DICOM object to the\nOpenREM database" fontname="Helvetica", tooltip="Extract data using OpenREM's python scripts" shape="box"];
-         delete_object [label="Delete the DICOM object\nfrom the DICOM store" fontname="Helvetica" tooltip="Delete the DICOM object from the local store SCP" shape="box"];
-         calc_skin_dose_map [shape=diamond label="Calculate\nskin dose\nmap?" fontname="Helvetica" tooltip="Calculate the skin dose map?"];
-         blank_node_1 [shape=none style=invisible];
+         orthanc [fontsize="8" shape="box" label=<
+         <FONT POINT-SIZE="10"><B>DICOM storage</B></FONT>
+         <BR ALIGN="CENTER" />
+         <BR ALIGN="CENTER" />See note 2 below
+         >];
+
+         orthanc_script [fontsize="8" shape="diamond" fillcolor=4 label=<
+         <FONT POINT-SIZE="10">Does the object</FONT>
+         <BR ALIGN="CENTER" /><FONT POINT-SIZE="10">contain useful data?</FONT>
+         >];
+
+         populate_database [fontsize="8" shape="box" label=<
+         <FONT POINT-SIZE="10"><B>Extract information</B></FONT>
+         <BR ALIGN="CENTER" />
+         <BR ALIGN="CENTER" />from the DICOM object
+         <BR ALIGN="CENTER" />to the OpenREM database
+         >];
+
+         delete_object [fontsize="8" shape="box" label=<
+         <FONT POINT-SIZE="10"><B>Delete the DICOM object</B></FONT>
+         <BR ALIGN="CENTER" />
+         <BR ALIGN="CENTER" />from the Orthanc DICOM store
+         >];
+
+         calc_skin_dose_map [fontsize="8" shape="diamond" fillcolor=4 label=<
+         <FONT POINT-SIZE="10">Calculate</FONT>
+         <BR ALIGN="CENTER" /><FONT POINT-SIZE="10">skin dose map?</FONT>
+         >];
 
          // Define the links between the DICOM store, database population and skin dose map calculation
-         conquest_script -> populate_database [label="Yes" fontcolor=darkgreen fontsize=8 fontname="Courier"];
+         orthanc_script -> populate_database [fontsize="10" fontcolor="darkgreen" label=<<FONT FACE="Helvetica"><B>Yes</B></FONT>>];
          populate_database -> delete_object;
-         conquest_script -> delete_object [label="No" fontcolor=red fontsize=8 fontname="Courier"];
-         conquest -> conquest_script;
+         orthanc_script -> delete_object [fontsize="10" fontcolor="red" label=<<FONT FACE="Helvetica"><B>No</B></FONT>>];
+         orthanc -> orthanc_script;
          populate_database -> calc_skin_dose_map;
 
          // Define the links between the two groups
-         // populate_database -> database
-         python_django -> populate_database [dir=back]
-         calc_skin_dose_map -> skin_dose_map_data [style=dotted label="Yes" fontcolor=darkgreen fontsize=8 fontname="Courier"]
+         python_django -> populate_database [dir=back];
+         //calc_skin_dose_map -> python_task_queue [style=dotted label="Yes" fontcolor=darkgreen fontsize=8]
+         calc_skin_dose_map -> python_task_queue [fontsize="10" fontcolor="darkgreen" label=<<FONT FACE="Helvetica"><B>Yes</B></FONT>>];
 
-         // Force certain nodes to be on the same level so that the diagram looks good (hopefully)
-         {rank=same; webserver conquest};
-         {rank=same; python_django->blank_node_1->delete_object->populate_database [style=invis]; rankdir=LR;}
+         // Force certain nodes to be on the same level so that the diagram looks good
+         //{rank=same; webserver orthanc};
+         //{rank=same; python_task_queue calc_skin_dose_map };
+         //{rank=same; python_task_queue skin_dose_map_data };
+         //{rank=same; data_export server_media_folder };
+         //{rank=same; python_django->blank_node_1->delete_object->populate_database [style=invis]; rankdir=LR;}
+         //{rank=same; database->populate_databse->delete_object [style=invis]; rankdir=LR;}
+         //{rank=same; python_django populate_database orthanc_script; rankdir=LR;}
+         //{rank=same; database populate_database delete_object; rankdir=LR;}
+         //{rank=same; database python_django populate_database; rankdir=LR;}
+         //{rank=same; python_task_queue calc_skin_dose_map; rankdir=LR;}
+         {rank=same; database populate_database delete_object; rankdir=LR;}
+         {rank=same; skin_dose_map_data -> server_media_folder -> data_export[style="invis"]; rankdir=LR;}
       }
 
       // Define the web browser, modality and pacs nodes
-      web_browser [label="Client\nweb browser" fontname="Helvetica" tooltip="The user's web browser" shape="box" style=rounded];
-      modality [label="X-ray imaging\nmodality" fontname="Helvetica" tooltip="Data send from an x-ray imaging modality" shape="parallelogram"];
-      pacs [label="PACS" fontname="Helvetica" tooltip="A Picture Archiving and Communication System" shape="parallelogram"];
-      blank_node_2 [label="" shape=none];
+      web_browser [fontsize="8" fillcolor=3 label=<
+      <FONT POINT-SIZE="10"><B>Client web browser</B></FONT>
+      <BR ALIGN="CENTER" />
+      <BR ALIGN="CENTER" />Access to tabulated data, filters,
+      <BR ALIGN="CENTER" />charts, exports, skin dose maps
+      >];
+
+      modality [fontsize="8" fillcolor=6 shape="parallelogram" label=<
+      <FONT POINT-SIZE="10"><B>X-ray imaging modalities</B></FONT>
+      <BR ALIGN="CENTER" />
+      <BR ALIGN="CENTER" />e.g. X-ray CT scanners,
+      <BR ALIGN="CENTER" />fluoroscopy systems,
+      <BR ALIGN="CENTER" />x-ray rooms
+      >];
+
+      pacs [fontsize="8" fillcolor=6 shape="parallelogram" label=<
+      <FONT POINT-SIZE="10"><B>PACS</B></FONT>
+      >];
+
+      //blank_node_2 [label="" shape=none];
 
       // Define the links that the browser, modality and pacs have
-      web_browser -> webserver [dir=both label="via user-requests\land Ajax\l" fontsize=8 fontname="Courier" tooltip="Ajax used to retrieve chart data"];
-      modality -> conquest [label="via modality\lconfiguration\l" fontsize=8 fontname="Courier"];
-      pacs -> conquest [label="via OpenREM\lquery-retrieve\l" fontsize=8 fontname="Courier"];
-      // pacs -> python_django [style=dotted dir=both];
+      web_browser -> webserver [dir=both];
+      modality -> orthanc;
+      pacs -> orthanc;
 
       // Force the web browser, blank node, modality and pacs to be on the same level in a specific order
-      {rank=same; web_browser->blank_node_2->modality->pacs [style=invis]; rankdir=LR;};
-   }
+      //{rank=same; web_browser modality pacs; rankdir=LR;};
+    }
+
 
 Alternatives
 ------------
