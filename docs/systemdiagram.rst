@@ -3,7 +3,7 @@ Diagram of system components
 
 .. graphviz::
 
-    digraph {
+   digraph G {
 
       // Define global style settings
       graph [pad="0.25", ranksep="0.5", nodesep="0.75" colorscheme=rdylbu10];
@@ -168,7 +168,7 @@ Diagram of system components
 
       // Force the web browser, blank node, modality and pacs to be on the same level in a specific order
       //{rank=same; web_browser modality pacs; rankdir=LR;};
-    }
+   }
 
 
 Alternatives
