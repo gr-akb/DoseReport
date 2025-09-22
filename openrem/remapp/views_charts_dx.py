@@ -791,6 +791,12 @@ def dx_plot_calculations(f, user_profile, return_as_dict=False):
                 df["projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"] = df["projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"].astype("object")
                 df = df[df["projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"].str.contains(f.data["projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"], case=False)]
                 df["projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"] = df["projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"].astype("category")
+
+        if "projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name" in f.data:
+            if f.data["projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"]:
+                df["projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"] = df["projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"].astype("object")
+                df = df[df["projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"].str.contains(f.data["projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"], case=False)]
+                df["projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"] = df["projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"].astype("category")
         #######################################################################
 
         if user_profile.plotDXAcquisitionMeanDAP:
