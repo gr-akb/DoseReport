@@ -84,6 +84,12 @@
     <th scope="col">Type</th>
     <th scope="col">CTDI<sub>vol</sub> (mGy)</th>
     <th scope="col">DLP (mGy&middot;cm)</th>
+    <th scope="col">
+        <table aria-describedby="SSDE and WED">
+            <tr><td class="nowrap">SSDE (mGy)</td></tr>
+            <tr><td class="nowrap">WED (mm)</td></tr>
+        </table>
+    </th>
     <th scope="col">Scanning length (mm)</th>
     <th scope="col">kVp</th>
     <th scope="col">mA</th>
@@ -96,11 +102,12 @@
     <th scope="col">X-ray modulation type</th>
     {% for event in events_all %}
       {% with source=event.ctxraysourceparameters_set.all %}
+      {% with source_zero=source.0 %}
+      {% with num_sources=event.number_of_xray_sources %}
       {% with dose_check=event.ctdosecheckdetails_set.get %}
       {% with dose_check_person_alert=dose_check.tid1020_alert.get %}
       {% with dose_check_person_notification=dose_check.tid1020_notification.get %}
-      {% with source_zero=source.0 %}
-      {% with num_sources=event.number_of_xray_sources %}
+      {% with ssde_details=event.sizespecificdoseestimation_set.get %}
 
       <tr>
         <td rowspan="2">{{ event.acquisition_protocol }}</td>
@@ -123,6 +130,12 @@
           {% endif %}
         </td>
         <td rowspan="2">{{ event.dlp|floatformat:2 }}</td>
+        <td rowspan="2">
+            <table aria-describedby="SSDE and WED">
+                <tr><td class="nowrap">{{ event.size_specific_dose_estimation|floatformat:2 }}</td></tr>
+                <tr><td class="nowrap">{{ ssde_details.water_equivalent_diameter|floatformat:0 }}</td></tr>
+            </table>
+        </td>
         <td rowspan="2">{{ event.scanninglength_set.get.scanning_length|floatformat:0 }}</td>
         {% if num_sources != 2 %}
           <td rowspan="2">{{ source_zero.kvp|floatformat:0 }}</td>
@@ -215,7 +228,7 @@
               {% endif %}
             </td>
         </tr>
-      {% endwith %}{% endwith %}{% endwith %}{% endwith %}{% endwith %}{% endwith %}
+      {% endwith %}{% endwith %}{% endwith %}{% endwith %}{% endwith %}{% endwith %}{% endwith %}
     {% endfor %}
 </table>
 

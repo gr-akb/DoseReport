@@ -69,6 +69,8 @@ from remapp.models import (  # pylint: disable=wrong-import-order, wrong-import-
     ProjectionXRayRadiationDose,
     PulseWidth,
     ScanningLength,
+    SizeSpecificDoseEstimation,
+    WEDSeriesOrInstances,
     XrayFilters,
     XrayGrid,
     XrayTubeCurrent,
@@ -1362,6 +1364,41 @@ def _ctdosecheckdetails(dataset, dosecheckdetails, isalertdetails):  # TID 10015
     dosecheckdetails.save()
 
 
+def _size_specific_dose_estimation_details(event, ssde_content_sequence):
+    # TODO: Do we want to save all WEDs per z location if available in rdsr?
+    ssde_details = SizeSpecificDoseEstimation.objects.create(ct_irradiation_event_data=event)
+    for cont in ssde_content_sequence:
+        if cont.ConceptNameCodeSequence[0].CodeMeaning == "Measurement Method":
+            ssde_details.measurement_method = get_or_create_cid(
+                cont.ConceptCodeSequence[0].CodeValue,
+                cont.ConceptCodeSequence[0].CodeMeaning
+            )
+        elif cont.ConceptNameCodeSequence[0].CodeMeaning == "Measured Lateral Dimension":
+            ssde_details.measured_lateral_dimension = test_numeric_value(cont.MeasuredValueSequence[0].NumericValue)
+        elif cont.ConceptNameCodeSequence[0].CodeMeaning == "Measured AP Dimension":
+            ssde_details.measured_ap_dimension = test_numeric_value(cont.MeasuredValueSequence[0].NumericValue)
+        elif cont.ConceptNameCodeSequence[0].CodeMeaning == "Derived effective Diameter":
+            ssde_details.derived_effective_diameter = test_numeric_value(cont.MeasuredValueSequence[0].NumericValue)
+        elif cont.ConceptNameCodeSequence[0].CodeMeaning == "Water Equivalent Diameter":
+            ssde_details.water_equivalent_diameter = test_numeric_value(cont.MeasuredValueSequence[0].NumericValue)
+            if hasattr(cont, 'ContentSequence'):
+                for cont2 in cont.ContentSequence:
+                    if cont2.ConceptNameCodeSequence[0].CodeMeaning == "Measurement Method":
+                        ssde_details.water_equivalent_diameter_method = get_or_create_cid(
+                            cont2.ConceptCodeSequence[0].CodeValue,
+                            cont2.ConceptCodeSequence[0].CodeMeaning
+                        )
+        elif cont.ConceptNameCodeSequence[0].CodeMeaning == \
+                "Series or Instance used for Water Equivalent Diameter estimation":
+            wed_series_instances = WEDSeriesOrInstances.objects.create(ssde_details)
+            wed_series_instances.wed_series_or_instance = cont.UID
+            wed_series_instances.save()
+        elif cont.ConceptNameCodeSequence[0].CodeMeaning == \
+                "Z value of location of Water Equivalent Diameter estimation":
+            ssde_details.wed_estimate_location_z = test_numeric_value(cont.MeasuredValueSequence[0].NumericValue)
+    ssde_details.save()
+
+
 def _ctirradiationeventdata(dataset, ct):  # TID 10013
 
     event = CtIrradiationEventData.objects.create(ct_radiation_dose=ct)
@@ -1488,6 +1525,15 @@ def _ctirradiationeventdata(dataset, ct):  # TID 10013
                             cont2.MeasuredValueSequence[0].NumericValue
                         )
                         ## Effective dose measurement method and conversion factor
+                    elif (
+                        cont2.ConceptNameCodeSequence[0].CodeMeaning == "Size Specific Dose Estimate"
+                    ):
+                        ssde = test_numeric_value(cont2.MeasuredValueSequence[0].NumericValue)
+                        # (at least) Canon puts in 0 if value is unknown. Skip those.
+                        if ssde > 0:
+                            event.size_specific_dose_estimation = ssde
+                            if hasattr(cont2, 'ContentSequence'):
+                                _size_specific_dose_estimation_details(event, cont2.ContentSequence)
                     ## CT Dose Check Details
                     ## Dose Check Alert Details and Notifications Details can appear indepently
                     elif (

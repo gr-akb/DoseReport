@@ -2891,6 +2891,9 @@ class CtIrradiationEventData(models.Model):  # TID 10013
     effective_dose_conversion_factor = models.DecimalField(
         max_digits=16, decimal_places=8, blank=True, null=True
     )
+    size_specific_dose_estimation = models.DecimalField(
+        max_digits=16, decimal_places=8, blank=True, null=True
+    )
     xray_modulation_type = models.TextField(blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
     # Not in DICOM standard:
