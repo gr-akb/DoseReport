@@ -164,6 +164,7 @@ def ctxlsx(filterdict, pid=False, name=None, patid=None, user=None):
         "ctradiationdose__ctirradiationeventdata__nominal_total_collimation_width",
         "ctradiationdose__ctirradiationeventdata__pitch_factor",
         "ctradiationdose__ctirradiationeventdata__mean_ctdivol",
+        "ctradiationdose__ctirradiationeventdata__size_specific_dose_estimation",
         "ctradiationdose__ctirradiationeventdata__ctxraysourceparameters__kvp",
         "ctradiationdose__ctirradiationeventdata__ctxraysourceparameters__maximum_xray_tube_current",
         "ctradiationdose__ctirradiationeventdata__ctxraysourceparameters__xray_tube_current",
@@ -177,6 +178,7 @@ def ctxlsx(filterdict, pid=False, name=None, patid=None, user=None):
         "Total collimation (mm)",
         "Pitch",
         "CTDIvol (mGy)",
+        "SSDE (mGy)",
         "kVp",
         "Maximum mA",
         "mA",
@@ -419,6 +421,7 @@ def _generate_all_data_headers_ct(max_events):
             "E" + str(h + 1) + " CTDIvol",
             "E" + str(h + 1) + " Phantom",
             "E" + str(h + 1) + " DLP",
+            "E" + str(h + 1) + " SSDE",
             "E" + str(h + 1) + " S1 name",
             "E" + str(h + 1) + " S1 kVp",
             "E" + str(h + 1) + " S1 max mA",
@@ -484,6 +487,7 @@ def _ct_get_series_data(s):
         s.mean_ctdivol,
         phantom,
         s.dlp,
+        s.size_specific_dose_estimation,
     ]
     source_parameters = OrderedDict()
     source_parameters[0] = {
