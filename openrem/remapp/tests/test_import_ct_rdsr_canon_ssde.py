@@ -40,7 +40,7 @@ class ImportCTRDSR(TestCase):
 
         # Test that patient identifiable data is not stored
         self.assertEqual(study.patientmoduleattr_set.get().patient_name, None)
-        self.assertEqual(study.patientmoduleattr_set.get().not_patient_indicator, None)
+        self.assertEqual(study.patientmoduleattr_set.get().not_patient_indicator, 'IDs: *test* | Names: *test*')
 
         # Test that study level data is recorded correctly
         self.assertEqual(study.study_date, datetime.date(2025, 9, 30))
