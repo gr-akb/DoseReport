@@ -777,7 +777,8 @@ def dx_plot_calculations(f, user_profile, return_as_dict=False):
 
         #######################################################################
         # Addressing issue 1050 (https://bitbucket.org/openrem/openrem/issues/1050)
-        # Filter data frame using acquisition protocol name and min / max event DAP filters
+        # Filter data frame using acquisition protocol name, min / max event DAP,
+        # and standard acquisition name filters.
         if "event_dap_min" in f.data:
             if f.data["event_dap_min"]:
                 df = df[df["projectionxrayradiationdose__irradeventxraydata__dose_area_product"] >= float(f.data["event_dap_min"])]
