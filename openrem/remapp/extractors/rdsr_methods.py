@@ -79,6 +79,21 @@ from remapp.models import (  # pylint: disable=wrong-import-order, wrong-import-
 
 logger = logging.getLogger("remapp.extractors.rdsr")
 
+def _matches_coding_scheme(concept_name_code_sequence_item, code_value, coding_scheme_designator=None,
+                           coding_scheme_version=None, code_meaning=None):
+    """ Compares if the concept_name_code_sequence_item matches with the given code/coding identifiers.
+        code_value is required. Others are optional, however, if given they are used for matching
+        returns True if matches, otherwise falls.
+        Will raise an exception if concept_name_code_sequence_item doesn't have the attribute that it tries to
+        match with.
+    """
+    return (concept_name_code_sequence_item.CodeValue == code_value and
+            (coding_scheme_designator is None or
+             concept_name_code_sequence_item.CodingSchemeDesignator == coding_scheme_designator) and
+            (coding_scheme_version is None or
+             concept_name_code_sequence_item.CodingSchemeVersion == coding_scheme_version) and
+            (code_meaning is None or concept_name_code_sequence_item.CodeMeaning == code_meaning)
+            )
 
 def _deviceparticipant(dataset, eventdatatype, foreignkey):
 
@@ -1369,45 +1384,45 @@ def _size_specific_dose_estimation_details(event, ssde_content_sequence):
     """Fills the Size Specific Dose Estimation details and the SSDE/WED per longitudinal Z position (if available)"""
     ssde_details = SizeSpecificDoseEstimation.objects.create(ct_irradiation_event_data=event)
     for cont in ssde_content_sequence:
-        if cont.ConceptNameCodeSequence[0].CodeMeaning == "Measurement Method":
+        if _matches_coding_scheme(cont.ConceptNameCodeSequence[0], "370129005"):  # "Measurement Method":
             ssde_details.measurement_method = get_or_create_cid(
                 cont.ConceptCodeSequence[0].CodeValue,
                 cont.ConceptCodeSequence[0].CodeMeaning
             )
-        elif cont.ConceptNameCodeSequence[0].CodeMeaning == "Measured Lateral Dimension":
+        elif _matches_coding_scheme(cont.ConceptNameCodeSequence[0], "113931"):  # "Measured Lateral Dimension"
             ssde_details.measured_lateral_dimension = test_numeric_value(cont.MeasuredValueSequence[0].NumericValue)
-        elif cont.ConceptNameCodeSequence[0].CodeMeaning == "Measured AP Dimension":
+        elif _matches_coding_scheme(cont.ConceptNameCodeSequence[0], "113932"):  # "Measured AP Dimension"
             ssde_details.measured_ap_dimension = test_numeric_value(cont.MeasuredValueSequence[0].NumericValue)
-        elif cont.ConceptNameCodeSequence[0].CodeMeaning == "Derived effective Diameter":
+        elif _matches_coding_scheme(cont.ConceptNameCodeSequence[0], "113933"):  # "Derived effective Diameter"
             ssde_details.derived_effective_diameter = test_numeric_value(cont.MeasuredValueSequence[0].NumericValue)
-        elif cont.ConceptNameCodeSequence[0].CodeMeaning == "Water Equivalent Diameter":
+        elif _matches_coding_scheme(cont.ConceptNameCodeSequence[0], "113980"):  # "Water Equivalent Diameter"
             ssde_details.water_equivalent_diameter = test_numeric_value(cont.MeasuredValueSequence[0].NumericValue)
             if hasattr(cont, 'ContentSequence'):
                 for cont2 in cont.ContentSequence:
-                    if cont2.ConceptNameCodeSequence[0].CodeMeaning == "Measurement Method":
+                    if _matches_coding_scheme(cont2.ConceptNameCodeSequence[0], "370129005"):  # "Measurement Method"
                         ssde_details.water_equivalent_diameter_method = get_or_create_cid(
                             cont2.ConceptCodeSequence[0].CodeValue,
                             cont2.ConceptCodeSequence[0].CodeMeaning
                         )
-        elif cont.ConceptNameCodeSequence[0].CodeMeaning == \
-                "Series or Instance used for Water Equivalent Diameter estimation":
+        elif _matches_coding_scheme(cont.ConceptNameCodeSequence[0], "113985"):
+            # "Series or Instance used for Water Equivalent Diameter estimation"
             wed_series_instances = WEDSeriesOrInstances.objects.create(ssde_details)
             wed_series_instances.wed_series_or_instance = cont.UID
             wed_series_instances.save()
-        elif cont.ConceptNameCodeSequence[0].CodeMeaning == \
-                "Z value of location of Water Equivalent Diameter estimation":
+        elif _matches_coding_scheme(cont.ConceptNameCodeSequence[0], "113986"):
+            # "Z value of location of Water Equivalent Diameter estimation"
             ssde_details.wed_estimate_location_z = test_numeric_value(cont.MeasuredValueSequence[0].NumericValue)
-        elif cont.ConceptNameCodeSequence[0].CodeMeaning == \
-                 "Size Specific Dose Estimate At Longitudinal Position Z":
+        elif _matches_coding_scheme(cont.ConceptNameCodeSequence[0], "113993"):
+            # "Size Specific Dose Estimate At Longitudinal Position Z"
             ssde_at_postion_z = SsdeLongitudinalPositionDetail(ct_irradiation_event_data=event)
             ssde_at_postion_z.ssde_at_longitudinal_z = test_numeric_value(cont.MeasuredValueSequence[0].NumericValue)
             if hasattr(cont, 'ContentSequence'):
                 for cont2 in cont.ContentSequence:
-                    if cont2.ConceptNameCodeSequence[0].CodeMeaning == "Longitudinal Position Z":
+                    if _matches_coding_scheme(cont2.ConceptNameCodeSequence[0], "113994"):  # "Longitudinal Position Z"
                         ssde_at_postion_z.longitudinal_position_z = test_numeric_value(
                             cont2.MeasuredValueSequence[0].NumericValue)
-                    elif cont2.ConceptNameCodeSequence[0].CodeMeaning == \
-                            "Water Equivalent Diameter At Longitudinal Position Z":
+                    elif _matches_coding_scheme(cont2.ConceptNameCodeSequence[0], "113995"):
+                        # "Water Equivalent Diameter At Longitudinal Position Z":
                         ssde_at_postion_z.wed_at_longitudional_z = test_numeric_value(
                             cont2.MeasuredValueSequence[0].NumericValue)
             ssde_at_postion_z.save()
@@ -1541,8 +1556,9 @@ def _ctirradiationeventdata(dataset, ct):  # TID 10013
                         )
                         ## Effective dose measurement method and conversion factor
                     elif (
-                        cont2.ConceptNameCodeSequence[0].CodeMeaning == "Size Specific Dose Estimate"
+                        cont2.ConceptNameCodeSequence[0].CodeValue == "113930"
                     ):
+                        # "Size Specific Dose Estimate"
                         ssde = test_numeric_value(cont2.MeasuredValueSequence[0].NumericValue)
                         # (at least) Canon puts in 0 if value is unknown. Skip those.
                         if ssde > 0:
