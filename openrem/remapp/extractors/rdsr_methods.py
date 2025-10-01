@@ -70,6 +70,7 @@ from remapp.models import (  # pylint: disable=wrong-import-order, wrong-import-
     PulseWidth,
     ScanningLength,
     SizeSpecificDoseEstimation,
+    SsdeLongitudinalPositionDetail,
     WEDSeriesOrInstances,
     XrayFilters,
     XrayGrid,
@@ -1365,7 +1366,7 @@ def _ctdosecheckdetails(dataset, dosecheckdetails, isalertdetails):  # TID 10015
 
 
 def _size_specific_dose_estimation_details(event, ssde_content_sequence):
-    # TODO: Do we want to save all WEDs per z location if available in rdsr?
+    """Fills the Size Specific Dose Estimation details and the SSDE/WED per longitudinal Z position (if available)"""
     ssde_details = SizeSpecificDoseEstimation.objects.create(ct_irradiation_event_data=event)
     for cont in ssde_content_sequence:
         if cont.ConceptNameCodeSequence[0].CodeMeaning == "Measurement Method":
@@ -1396,6 +1397,20 @@ def _size_specific_dose_estimation_details(event, ssde_content_sequence):
         elif cont.ConceptNameCodeSequence[0].CodeMeaning == \
                 "Z value of location of Water Equivalent Diameter estimation":
             ssde_details.wed_estimate_location_z = test_numeric_value(cont.MeasuredValueSequence[0].NumericValue)
+        elif cont.ConceptNameCodeSequence[0].CodeMeaning == \
+                 "Size Specific Dose Estimate At Longitudinal Position Z":
+            ssde_at_postion_z = SsdeLongitudinalPositionDetail(ct_irradiation_event_data=event)
+            ssde_at_postion_z.ssde_at_longitudinal_z = test_numeric_value(cont.MeasuredValueSequence[0].NumericValue)
+            if hasattr(cont, 'ContentSequence'):
+                for cont2 in cont.ContentSequence:
+                    if cont2.ConceptNameCodeSequence[0].CodeMeaning == "Longitudinal Position Z":
+                        ssde_at_postion_z.longitudinal_position_z = test_numeric_value(
+                            cont2.MeasuredValueSequence[0].NumericValue)
+                    elif cont2.ConceptNameCodeSequence[0].CodeMeaning == \
+                            "Water Equivalent Diameter At Longitudinal Position Z":
+                        ssde_at_postion_z.wed_at_longitudional_z = test_numeric_value(
+                            cont2.MeasuredValueSequence[0].NumericValue)
+            ssde_at_postion_z.save()
     ssde_details.save()
 
 

@@ -3014,7 +3014,6 @@ class ScanningLength(models.Model):  # TID 10014
 class SizeSpecificDoseEstimation(models.Model):
     """Container in TID 10013 to hold size specific dose estimation details"""
 
-    # TODO: Add this to the rdsr extraction routines. Issue #168
     ct_irradiation_event_data = models.ForeignKey(
         CtIrradiationEventData, on_delete=models.CASCADE
     )
@@ -3061,6 +3060,21 @@ class SizeSpecificDoseEstimation(models.Model):
                 ]
             ),
         ]
+
+class SsdeLongitudinalPositionDetail(models.Model):
+    """Container in TID 10013 to hold size specific dose estimation details per longitudinal position Z"""
+    ct_irradiation_event_data = models.ForeignKey(
+        CtIrradiationEventData, on_delete=models.CASCADE
+    )
+    ssde_at_longitudinal_z = models.DecimalField(
+        max_digits=16, decimal_places=8, blank=True, null=True
+    )
+    longitudinal_position_z = models.DecimalField(
+        max_digits=16, decimal_places=8, blank=True, null=True
+    )
+    wed_at_longitudional_z = models.DecimalField(
+        max_digits=16, decimal_places=8, blank=True, null=True
+    )
 
 
 class WEDSeriesOrInstances(models.Model):
