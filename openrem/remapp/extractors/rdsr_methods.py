@@ -1559,7 +1559,15 @@ def _ctirradiationeventdata(dataset, ct):  # TID 10013
                         cont2.ConceptNameCodeSequence[0].CodeValue == "113930"
                     ):
                         # "Size Specific Dose Estimate"
-                        ssde = test_numeric_value(cont2.MeasuredValueSequence[0].NumericValue)
+                        if cont2.MeasuredValueSequence[0]['NumericValue'].VM == 1:
+                            ssde = test_numeric_value(cont2.MeasuredValueSequence[0].NumericValue)
+                        else:
+                            # Multiple ssde values. According to the standard:
+                            # "More than one Size Specific Dose Estimate may be included, for example if different
+                            #   computation methods are used."
+                            # However, it doesn't seem to clear how it is determined what the order of various
+                            #   computation methods is. So, for now, we just take the first.
+                            ssde = test_numeric_value(cont2.MeasuredValueSequence[0].NumericValue[0])
                         # (at least) Canon puts in 0 if value is unknown. Skip those.
                         if ssde > 0:
                             event.size_specific_dose_estimation = ssde
