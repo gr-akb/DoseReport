@@ -43,6 +43,8 @@ from ..tools.check_standard_name_status import are_standard_names_enabled
 
 from ..interface.mod_filters import ct_acq_filter
 
+from ..templatetags.sort_ssde_methods import sort_ssde
+
 from .export_common_pandas import (
     get_common_data,
     common_headers,
@@ -164,7 +166,8 @@ def ctxlsx(filterdict, pid=False, name=None, patid=None, user=None):
         "ctradiationdose__ctirradiationeventdata__nominal_total_collimation_width",
         "ctradiationdose__ctirradiationeventdata__pitch_factor",
         "ctradiationdose__ctirradiationeventdata__mean_ctdivol",
-        "ctradiationdose__ctirradiationeventdata__size_specific_dose_estimation",
+        "ctradiationdose__ctirradiationeventdata__sizespecificdoseestimation__size_specific_dose_estimation",
+        "ctradiationdose__ctirradiationeventdata__sizespecificdoseestimation__measurement_method__code_value",
         "ctradiationdose__ctirradiationeventdata__ctxraysourceparameters__kvp",
         "ctradiationdose__ctirradiationeventdata__ctxraysourceparameters__maximum_xray_tube_current",
         "ctradiationdose__ctirradiationeventdata__ctxraysourceparameters__xray_tube_current",
@@ -179,6 +182,7 @@ def ctxlsx(filterdict, pid=False, name=None, patid=None, user=None):
         "Pitch",
         "CTDIvol (mGy)",
         "SSDE (mGy)",
+        "SSDE method",
         "kVp",
         "Maximum mA",
         "mA",
@@ -487,7 +491,8 @@ def _ct_get_series_data(s):
         s.mean_ctdivol,
         phantom,
         s.dlp,
-        s.size_specific_dose_estimation,
+        sort_ssde(s.sizespecificdoseestimation_set.all())[0].size_specific_dose_estimation if
+            s.sizespecificdoseestimation_set.count() > 0 else None,
     ]
     source_parameters = OrderedDict()
     source_parameters[0] = {

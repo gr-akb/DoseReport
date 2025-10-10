@@ -127,3 +127,12 @@ IGNORE_DEVICE_OBSERVER_UID_FOR_THESE_MODELS = ['GE OEC Fluorostar']
 
 # The following line can run on your OpenREM server to set up a dummy smtp server for testing:
 # python -m smtpd -n -c DebuggingServer localhost:25
+
+# The preference order of size-specific-dose-estimation methods, if multiple methods are available
+PREFERRED_ORDER_CT_SSDE_METHOD = ['113989', '113988', '113936', '113934', '113935', '113937']
+# 113934 - AAPM 204 Lateral Dimension
+# 113935 - AAPM 204 AP Dimension
+# 113936 - AAPM 204 Sum of Lateral and AP Dimension
+# 113937 - AAPM 204 Effective Diameter Estimated From Patient Age
+# 113988 - Estimated from Water Equivalent Diameter
+# 113989 - Arithmetic Average of SSDE(z)

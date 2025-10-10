@@ -64,6 +64,7 @@ from ..models import (
 from ..version import __version__
 
 from ..tools.check_standard_name_status import are_standard_names_enabled
+from openremproject.settings import PREFERRED_ORDER_CT_SSDE_METHOD
 
 logger = logging.getLogger(__name__)
 
@@ -1054,7 +1055,25 @@ def transform_to_one_row_per_exam(
         df[exam_cat_f_names] = df[exam_cat_f_names].astype("category")
 
     # Drop any duplicate acquisition pk rows
-    df.drop_duplicates(subset="Acquisition pk", inplace=True)
+    # if we have multiple SSDE values for CT acquisitions, we will have multiple rows with the same acquisition pk.
+    # make sure to order them first correctly to leave the desired SSDE values (from the preferred method).
+    if 'SSDE (mGy)' in df:
+        # The 'coerce_float' usage while creating the dataframe could have messed up the SSDE method, as it might be
+        # interpreted as a float.
+        # so, we should match as a float if the code value can be converted to float
+        preferred_order_method = [float(code_value) if code_value.isnumeric() else code_value for code_value in
+                                  PREFERRED_ORDER_CT_SSDE_METHOD]
+        method_order = dict(zip(preferred_order_method, range(len(preferred_order_method))))
+        df['SSDE method'] = df['SSDE method'].map(method_order)
+        df.sort_values(by='SSDE method', inplace=True)
+
+    df.drop_duplicates(subset="Acquisition pk", keep='first', inplace=True)
+
+    if 'SSDE (mGy)' in df:
+        df.drop(['SSDE method'], axis=1, inplace=True)
+        # sort df again
+        df.sort_values(by=['Study date', 'Study time'])
+
 
     # Reformat the DataFrame so that we have one row per exam, with sets of columns for each acquisition data
     g = df.groupby("pk").cumcount().add(1)

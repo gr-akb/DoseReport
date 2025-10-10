@@ -1380,9 +1380,8 @@ def _ctdosecheckdetails(dataset, dosecheckdetails, isalertdetails):  # TID 10015
     dosecheckdetails.save()
 
 
-def _size_specific_dose_estimation_details(event, ssde_content_sequence):
+def _size_specific_dose_estimation_details(ssde_details, ssde_content_sequence):
     """Fills the Size Specific Dose Estimation details and the SSDE/WED per longitudinal Z position (if available)"""
-    ssde_details = SizeSpecificDoseEstimation.objects.create(ct_irradiation_event_data=event)
     for cont in ssde_content_sequence:
         if _is_coded_concept(cont.ConceptNameCodeSequence[0], "370129005"):  # "Measurement Method":
             ssde_details.measurement_method = get_or_create_cid(
@@ -1414,7 +1413,8 @@ def _size_specific_dose_estimation_details(event, ssde_content_sequence):
             ssde_details.wed_estimate_location_z = test_numeric_value(cont.MeasuredValueSequence[0].NumericValue)
         elif _is_coded_concept(cont.ConceptNameCodeSequence[0], "113993"):
             # "Size Specific Dose Estimate At Longitudinal Position Z"
-            ssde_at_postion_z = SsdeLongitudinalPositionDetail(ct_irradiation_event_data=event)
+            ssde_at_postion_z = SsdeLongitudinalPositionDetail(ct_irradiation_event_data=
+                                                               ssde_details.ct_irradiation_event_data)
             ssde_at_postion_z.ssde_at_longitudinal_z = test_numeric_value(cont.MeasuredValueSequence[0].NumericValue)
             if hasattr(cont, 'ContentSequence'):
                 for cont2 in cont.ContentSequence:
@@ -1426,7 +1426,6 @@ def _size_specific_dose_estimation_details(event, ssde_content_sequence):
                         ssde_at_postion_z.wed_at_longitudional_z = test_numeric_value(
                             cont2.MeasuredValueSequence[0].NumericValue)
             ssde_at_postion_z.save()
-    ssde_details.save()
 
 
 def _ctirradiationeventdata(dataset, ct):  # TID 10013
@@ -1558,21 +1557,13 @@ def _ctirradiationeventdata(dataset, ct):  # TID 10013
                     elif (
                         cont2.ConceptNameCodeSequence[0].CodeValue == "113930"
                     ):
-                        # "Size Specific Dose Estimate"
-                        if cont2.MeasuredValueSequence[0]['NumericValue'].VM == 1:
-                            ssde = test_numeric_value(cont2.MeasuredValueSequence[0].NumericValue)
-                        else:
-                            # Multiple ssde values. According to the standard:
-                            # "More than one Size Specific Dose Estimate may be included, for example if different
-                            #   computation methods are used."
-                            # However, it doesn't seem to clear how it is determined what the order of various
-                            #   computation methods is. So, for now, we just take the first.
-                            ssde = test_numeric_value(cont2.MeasuredValueSequence[0].NumericValue[0])
-                        # (at least) Canon puts in 0 if value is unknown. Skip those.
+                        ssde = test_numeric_value(cont2.MeasuredValueSequence[0].NumericValue)
                         if ssde > 0:
-                            event.size_specific_dose_estimation = ssde
+                            ssde_details = SizeSpecificDoseEstimation.objects.create(ct_irradiation_event_data=event)
+                            ssde_details.size_specific_dose_estimation = ssde
                             if hasattr(cont2, 'ContentSequence'):
-                                _size_specific_dose_estimation_details(event, cont2.ContentSequence)
+                                _size_specific_dose_estimation_details(ssde_details, cont2.ContentSequence)
+                            ssde_details.save()
                     ## CT Dose Check Details
                     ## Dose Check Alert Details and Notifications Details can appear indepently
                     elif (

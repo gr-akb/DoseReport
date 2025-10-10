@@ -1,5 +1,5 @@
 {% extends "remapp/base.html" %}
-
+{% load sort_ssde_methods %}
 {% block navct%}<li class="active">{% endblock %}
 
 
@@ -107,7 +107,7 @@
       {% with dose_check=event.ctdosecheckdetails_set.get %}
       {% with dose_check_person_alert=dose_check.tid1020_alert.get %}
       {% with dose_check_person_notification=dose_check.tid1020_notification.get %}
-      {% with ssde_details=event.sizespecificdoseestimation_set.get %}
+      {% with ssde_details=event.sizespecificdoseestimation_set.all|sort_ssde %}
 
       <tr>
         <td rowspan="2">{{ event.acquisition_protocol }}</td>
@@ -132,8 +132,8 @@
         <td rowspan="2">{{ event.dlp|floatformat:2 }}</td>
         <td rowspan="2">
             <table aria-describedby="SSDE and WED">
-                <tr><td class="nowrap">{{ event.size_specific_dose_estimation|floatformat:2 }}</td></tr>
-                <tr><td class="nowrap">{{ ssde_details.water_equivalent_diameter|floatformat:0 }}</td></tr>
+                <tr><td class="nowrap">{{ ssde_details.0.size_specific_dose_estimation|floatformat:2 }}</td></tr>
+                <tr><td class="nowrap">{{ ssde_details.0.water_equivalent_diameter|floatformat:0 }}</td></tr>
             </table>
         </td>
         <td rowspan="2">{{ event.scanninglength_set.get.scanning_length|floatformat:0 }}</td>
