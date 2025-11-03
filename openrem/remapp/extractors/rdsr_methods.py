@@ -1413,8 +1413,8 @@ def _size_specific_dose_estimation_details(ssde_details, ssde_content_sequence):
             ssde_details.wed_estimate_location_z = test_numeric_value(cont.MeasuredValueSequence[0].NumericValue)
         elif _is_coded_concept(cont.ConceptNameCodeSequence[0], "113993"):
             # "Size Specific Dose Estimate At Longitudinal Position Z"
-            ssde_at_postion_z = SsdeLongitudinalPositionDetail(ct_irradiation_event_data=
-                                                               ssde_details.ct_irradiation_event_data)
+            ssde_at_postion_z = SsdeLongitudinalPositionDetail(size_specific_dose_estimation=
+                                                               ssde_details)
             ssde_at_postion_z.ssde_at_longitudinal_z = test_numeric_value(cont.MeasuredValueSequence[0].NumericValue)
             if hasattr(cont, 'ContentSequence'):
                 for cont2 in cont.ContentSequence:

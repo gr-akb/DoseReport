@@ -447,7 +447,7 @@ class ImportCTRDSR(TestCase):
         self.assertFalse(
             study.ctradiationdose_set.get()
             .ctirradiationeventdata_set.order_by("id")[0]
-            .ssdelongitudinalpositiondetail_set.exists()
+            .sizespecificdoseestimation_set.exists()
         )
         self.assertAlmostEqual(
             study.ctradiationdose_set.get()
@@ -476,27 +476,28 @@ class ImportCTRDSR(TestCase):
         self.assertAlmostEqual(
             study.ctradiationdose_set.get()
             .ctirradiationeventdata_set.order_by("id")[1]
+            .sizespecificdoseestimation_set.all()[0]
             .size_specific_dose_estimation,
             Decimal(26.3),
         )
         self.assertAlmostEqual(
             study.ctradiationdose_set.get()
             .ctirradiationeventdata_set.order_by("id")[1]
-            .sizespecificdoseestimation_set.get()
+            .sizespecificdoseestimation_set.all()[0]
             .water_equivalent_diameter,
             Decimal(66.0),
         )
         self.assertEqual(
             study.ctradiationdose_set.get()
             .ctirradiationeventdata_set.order_by("id")[1]
-            .sizespecificdoseestimation_set.get()
+            .sizespecificdoseestimation_set.all()[0]
             .measurement_method.code_meaning,
             "Arithmetic Average of SSDE(z)",
         )
         self.assertEqual(
             study.ctradiationdose_set.get()
             .ctirradiationeventdata_set.order_by("id")[1]
-            .sizespecificdoseestimation_set.get()
+            .sizespecificdoseestimation_set.all()[0]
             .water_equivalent_diameter_method.code_meaning,
             "Water Equivalent Diameter From Localizer",
         )
@@ -532,6 +533,7 @@ class ImportCTRDSR(TestCase):
         set_ssde_found = {frozenset(d.items()) for d in
                           study.ctradiationdose_set.get()
                           .ctirradiationeventdata_set.order_by("id")[1]
+                          .sizespecificdoseestimation_set.all()[0]
                           .ssdelongitudinalpositiondetail_set.values("ssde_at_longitudinal_z",
                                                                      "longitudinal_position_z",
                                                                      "wed_at_longitudional_z")
@@ -565,27 +567,28 @@ class ImportCTRDSR(TestCase):
         self.assertAlmostEqual(
             study.ctradiationdose_set.get()
             .ctirradiationeventdata_set.order_by("id")[2]
+            .sizespecificdoseestimation_set.all()[0]
             .size_specific_dose_estimation,
             Decimal(1.4),
         )
         self.assertAlmostEqual(
             study.ctradiationdose_set.get()
             .ctirradiationeventdata_set.order_by("id")[2]
-            .sizespecificdoseestimation_set.get()
+            .sizespecificdoseestimation_set.all()[0]
             .water_equivalent_diameter,
             Decimal(67.0),
         )
         self.assertEqual(
             study.ctradiationdose_set.get()
             .ctirradiationeventdata_set.order_by("id")[2]
-            .sizespecificdoseestimation_set.get()
+            .sizespecificdoseestimation_set.all()[0]
             .measurement_method.code_meaning,
             "Arithmetic Average of SSDE(z)",
         )
         self.assertEqual(
             study.ctradiationdose_set.get()
             .ctirradiationeventdata_set.order_by("id")[2]
-            .sizespecificdoseestimation_set.get()
+            .sizespecificdoseestimation_set.all()[0]
             .water_equivalent_diameter_method.code_meaning,
             "Water Equivalent Diameter From Localizer",
         )
@@ -2210,6 +2213,7 @@ class ImportCTRDSR(TestCase):
         set_ssde_found = {frozenset(d.items()) for d in
                           study.ctradiationdose_set.get()
                           .ctirradiationeventdata_set.order_by("id")[2]
+                          .sizespecificdoseestimation_set.all()[0]
                           .ssdelongitudinalpositiondetail_set.values("ssde_at_longitudinal_z",
                                                                      "longitudinal_position_z",
                                                                      "wed_at_longitudional_z")
@@ -3485,6 +3489,7 @@ class ImportCTRDSR(TestCase):
         set_ssde_found = {frozenset(d.items()) for d in
                           study.ctradiationdose_set.get()
                           .ctirradiationeventdata_set.order_by("id")[3]
+                          .sizespecificdoseestimation_set.all()[0]
                           .ssdelongitudinalpositiondetail_set.values("ssde_at_longitudinal_z",
                                                                      "longitudinal_position_z",
                                                                      "wed_at_longitudional_z")
@@ -3513,27 +3518,28 @@ class ImportCTRDSR(TestCase):
         self.assertAlmostEqual(
             study.ctradiationdose_set.get()
             .ctirradiationeventdata_set.order_by("id")[3]
+            .sizespecificdoseestimation_set.all()[0]
             .size_specific_dose_estimation,
             Decimal(34.8),
         )
         self.assertAlmostEqual(
             study.ctradiationdose_set.get()
             .ctirradiationeventdata_set.order_by("id")[3]
-            .sizespecificdoseestimation_set.get()
+            .sizespecificdoseestimation_set.all()[0]
             .water_equivalent_diameter,
             Decimal(67.0),
         )
         self.assertEqual(
             study.ctradiationdose_set.get()
             .ctirradiationeventdata_set.order_by("id")[3]
-            .sizespecificdoseestimation_set.get()
+            .sizespecificdoseestimation_set.all()[0]
             .measurement_method.code_meaning,
             "Arithmetic Average of SSDE(z)",
         )
         self.assertEqual(
             study.ctradiationdose_set.get()
             .ctirradiationeventdata_set.order_by("id")[3]
-            .sizespecificdoseestimation_set.get()
+            .sizespecificdoseestimation_set.all()[0]
             .water_equivalent_diameter_method.code_meaning,
             "Water Equivalent Diameter From Localizer",
         )

@@ -1838,6 +1838,9 @@ def set_ct_chart_options(ct_form, user_profile):
     user_profile.plotCTAcquisitionMeanCTDI = ct_form.cleaned_data[
         "plotCTAcquisitionMeanCTDI"
     ]
+    user_profile.plotCTAcquisitionMeanSSDE = ct_form.cleaned_data[
+        "plotCTAcquisitionMeanSSDE"
+    ]
     user_profile.plotCTAcquisitionFreq = ct_form.cleaned_data["plotCTAcquisitionFreq"]
     user_profile.plotCTAcquisitionCTDIvsMass = ct_form.cleaned_data[
         "plotCTAcquisitionCTDIvsMass"
@@ -1847,6 +1850,9 @@ def set_ct_chart_options(ct_form, user_profile):
     ]
     user_profile.plotCTAcquisitionCTDIOverTime = ct_form.cleaned_data[
         "plotCTAcquisitionCTDIOverTime"
+    ]
+    user_profile.plotCTAcquisitionSSDEOverTime = ct_form.cleaned_data[
+        "plotCTAcquisitionSSDEOverTime"
     ]
     user_profile.plotCTAcquisitionDLPOverTime = ct_form.cleaned_data[
         "plotCTAcquisitionDLPOverTime"
@@ -1913,11 +1919,17 @@ def set_ct_chart_options(ct_form, user_profile):
         user_profile.plotCTStandardAcquisitionMeanCTDI = ct_form.cleaned_data[
             "plotCTStandardAcquisitionMeanCTDI"
         ]
+        user_profile.plotCTStandardAcquisitionMeanSSDE = ct_form.cleaned_data[
+            "plotCTStandardAcquisitionMeanSSDE"
+        ]
         user_profile.plotCTStandardAcquisitionDLPOverTime = ct_form.cleaned_data[
             "plotCTStandardAcquisitionDLPOverTime"
         ]
         user_profile.plotCTStandardAcquisitionCTDIOverTime = ct_form.cleaned_data[
             "plotCTStandardAcquisitionCTDIOverTime"
+        ]
+        user_profile.plotCTStandardAcquisitionSSDEOverTime = ct_form.cleaned_data[
+            "plotCTStandardAcquisitionSSDEOverTime"
         ]
         user_profile.plotCTStandardAcquisitionDLPvsMass = ct_form.cleaned_data[
             "plotCTStandardAcquisitionDLPvsMass"
@@ -1961,6 +1973,7 @@ def initialise_ct_form_data(ct_acquisition_types, user_profile):
         "plotCTAcquisitionCTDIvsMass": user_profile.plotCTAcquisitionCTDIvsMass,
         "plotCTAcquisitionDLPvsMass": user_profile.plotCTAcquisitionDLPvsMass,
         "plotCTAcquisitionCTDIOverTime": user_profile.plotCTAcquisitionCTDIOverTime,
+        "plotCTAcquisitionSSDEOverTime": user_profile.plotCTAcquisitionSSDEOverTime,
         "plotCTAcquisitionDLPOverTime": user_profile.plotCTAcquisitionDLPOverTime,
         "plotCTAcquisitionTypes": ct_acquisition_types,
         "plotCTStudyMeanDLP": user_profile.plotCTStudyMeanDLP,
@@ -1990,11 +2003,17 @@ def initialise_ct_form_data(ct_acquisition_types, user_profile):
         ct_form_data["plotCTStandardAcquisitionMeanCTDI"] = (
             user_profile.plotCTStandardAcquisitionMeanCTDI
         )
+        ct_form_data["plotCTStandardAcquisitionMeanSSDE"] = (
+            user_profile.plotCTStandardAcquisitionMeanSSDE
+        )
         ct_form_data["plotCTStandardAcquisitionDLPOverTime"] = (
             user_profile.plotCTStandardAcquisitionDLPOverTime
         )
         ct_form_data["plotCTStandardAcquisitionCTDIOverTime"] = (
             user_profile.plotCTStandardAcquisitionCTDIOverTime
+        )
+        ct_form_data["plotCTStandardAcquisitionSSDEOverTime"] = (
+            user_profile.plotCTStandardAcquisitionSSDEOverTime
         )
         ct_form_data["plotCTStandardAcquisitionDLPvsMass"] = (
             user_profile.plotCTStandardAcquisitionDLPvsMass

@@ -60,6 +60,7 @@ def generate_required_ct_charts_list(profile):
     charts_of_interest = [
         profile.plotCTAcquisitionDLPOverTime,
         profile.plotCTAcquisitionCTDIOverTime,
+        profile.plotCTAcquisitionSSDEOverTime,
         profile.plotCTStudyMeanDLPOverTime,
         profile.plotCTRequestDLPOverTime,
     ]
@@ -67,6 +68,7 @@ def generate_required_ct_charts_list(profile):
         charts_of_interest.append(profile.plotCTStandardStudyMeanDLPOverTime)
         charts_of_interest.append(profile.plotCTStandardAcquisitionDLPOverTime)
         charts_of_interest.append(profile.plotCTStandardAcquisitionCTDIOverTime)
+        charts_of_interest.append(profile.plotCTStandardAcquisitionSSDEOverTime)
 
     if any(charts_of_interest):
         keys = list(dict(profile.TIME_PERIOD).keys())
@@ -149,6 +151,36 @@ def generate_required_ct_charts_list(profile):
                 }
             )
 
+    if profile.plotCTAcquisitionMeanSSDE:
+        if profile.plotMean:
+            required_charts.append(
+                {
+                    "title": "Chart of acquisition protocol mean SSDE",
+                    "var_name": "acquisitionMeanSSDE",
+                }
+            )
+        if profile.plotMedian:
+            required_charts.append(
+                {
+                    "title": "Chart of acquisition protocol median SSDE",
+                    "var_name": "acquisitionMedianSSDE",
+                }
+            )
+        if profile.plotBoxplots:
+            required_charts.append(
+                {
+                    "title": "Boxplot of acquisition protocol SSDE",
+                    "var_name": "acquisitionBoxplotSSDE",
+                }
+            )
+        if profile.plotHistograms:
+            required_charts.append(  # nosec
+                {
+                    "title": "Histogram of acquisition protocol SSDE",
+                    "var_name": "acquisitionHistogramSSDE",
+                }
+            )
+
     if profile.plotCTAcquisitionDLPOverTime:
         if profile.plotMean:
             required_charts.append(
@@ -190,6 +222,44 @@ def generate_required_ct_charts_list(profile):
                         + ")"
                     ),
                     "var_name": "acquisitionMedianCTDIOverTime",
+                }
+            )
+
+    if profile.plotCTAcquisitionDLPvsMass:
+        required_charts.append(
+            {
+                "title": "Chart of acquisition protocol DLP vs patient mass",
+                "var_name": "acquisitionScatterDLPvsMass",
+            }
+        )
+
+    if profile.plotCTAcquisitionCTDIvsMass:
+        required_charts.append(  # nosec
+            {
+                "title": mark_safe(
+                    "Chart of acquisition protocol CTDI<sub>vol</sub> vs patient mass"
+                ),
+                "var_name": "acquisitionScatterCTDIvsMass",
+            }
+        )
+
+    if profile.plotCTAcquisitionSSDEOverTime:
+        if profile.plotMean:
+            required_charts.append(
+                {
+                    "title": "Chart of acquisition protocol mean SSDE over time ("
+                             + time_period
+                             + ")",
+                    "var_name": "acquisitionMeanSSDEOverTime",
+                }
+            )
+        if profile.plotMedian:
+            required_charts.append(
+                {
+                    "title": "Chart of acquisition protocol median SSDE over time ("
+                             + time_period
+                             + ")",
+                    "var_name": "acquisitionMedianSSDEOverTime",
                 }
             )
 
@@ -288,6 +358,36 @@ def generate_required_ct_charts_list(profile):
                     }
                 )
 
+        if profile.plotCTStandardAcquisitionMeanSSDE:
+            if profile.plotMean:
+                required_charts.append(
+                    {
+                        "title": "Chart of standard acquisition name mean SSDE",
+                        "var_name": "standardAcquisitionMeanSSDE",
+                    }
+                )
+            if profile.plotMedian:
+                required_charts.append(
+                    {
+                        "title": "Chart of standard acquisition name median SSDE",
+                        "var_name": "standardAcquisitionMedianSSDE",
+                    }
+                )
+            if profile.plotBoxplots:
+                required_charts.append(
+                    {
+                        "title": "Boxplot of standard acquisition name SSDE",
+                        "var_name": "standardAcquisitionBoxplotSSDE",
+                    }
+                )
+            if profile.plotHistograms:
+                required_charts.append(
+                    {
+                        "title": "Histogram of standard acquisition name SSDE",
+                        "var_name": "standardAcquisitionHistogramSSDE",
+                    }
+                )
+
         if profile.plotCTStandardAcquisitionDLPOverTime:
             if profile.plotMean:
                 required_charts.append(
@@ -329,6 +429,26 @@ def generate_required_ct_charts_list(profile):
                             + ")"
                         ),
                         "var_name": "standardAcquisitionMedianCTDIOverTime",
+                    }
+                )
+
+        if profile.plotCTStandardAcquisitionSSDEOverTime:
+            if profile.plotMean:
+                required_charts.append(
+                    {
+                        "title": "Chart of standard acquisition name mean SSDE over time ("
+                                 + time_period
+                                 + ")",
+                        "var_name": "standardAcquisitionMeanSSDEOverTime",
+                    }
+                )
+            if profile.plotMedian:
+                required_charts.append(
+                    {
+                        "title": "Chart of standard acquisition name median SSDE over time ("
+                        + time_period
+                        + ")",
+                        "var_name": "standardAcquisitionMedianSSDEOverTime",
                     }
                 )
 
@@ -723,6 +843,7 @@ def ct_plot_calculations(f, user_profile, return_as_dict=False):
     charts_of_interest = [
         user_profile.plotCTAcquisitionDLPOverTime,
         user_profile.plotCTAcquisitionCTDIOverTime,
+        user_profile.plotCTAcquisitionSSDEOverTime,
         user_profile.plotCTStudyMeanDLPOverTime,
         user_profile.plotCTRequestDLPOverTime,
     ]
@@ -730,6 +851,7 @@ def ct_plot_calculations(f, user_profile, return_as_dict=False):
         charts_of_interest.append(user_profile.plotCTStandardStudyMeanDLPOverTime)
         charts_of_interest.append(user_profile.plotCTStandardAcquisitionDLPOverTime)
         charts_of_interest.append(user_profile.plotCTStandardAcquisitionCTDIOverTime)
+        charts_of_interest.append(user_profile.plotCTStandardAcquisitionSSDEOverTime)
     if any(charts_of_interest):
         plot_timeunit_period = user_profile.plotCTOverTimePeriod
 
@@ -738,18 +860,22 @@ def ct_plot_calculations(f, user_profile, return_as_dict=False):
     charts_of_interest = [
         user_profile.plotCTAcquisitionFreq,
         user_profile.plotCTAcquisitionMeanCTDI,
+        user_profile.plotCTAcquisitionMeanSSDE,
         user_profile.plotCTAcquisitionMeanDLP,
         user_profile.plotCTAcquisitionCTDIvsMass,
         user_profile.plotCTAcquisitionDLPvsMass,
         user_profile.plotCTAcquisitionCTDIOverTime,
+        user_profile.plotCTAcquisitionSSDEOverTime,
         user_profile.plotCTAcquisitionDLPOverTime,
     ]
     if enable_standard_names:
         charts_of_interest.append(user_profile.plotCTStandardAcquisitionFreq)
         charts_of_interest.append(user_profile.plotCTStandardAcquisitionMeanDLP)
         charts_of_interest.append(user_profile.plotCTStandardAcquisitionMeanCTDI)
+        charts_of_interest.append(user_profile.plotCTStandardAcquisitionMeanSSDE)
         charts_of_interest.append(user_profile.plotCTStandardAcquisitionDLPOverTime)
         charts_of_interest.append(user_profile.plotCTStandardAcquisitionCTDIOverTime)
+        charts_of_interest.append(user_profile.plotCTStandardAcquisitionSSDEOverTime)
         charts_of_interest.append(user_profile.plotCTStandardAcquisitionDLPvsMass)
         charts_of_interest.append(user_profile.plotCTStandardAcquisitionCTDIvsMass)
 
@@ -763,10 +889,12 @@ def ct_plot_calculations(f, user_profile, return_as_dict=False):
         charts_of_interest = [
             user_profile.plotCTAcquisitionFreq,
             user_profile.plotCTAcquisitionMeanCTDI,
+            user_profile.plotCTAcquisitionMeanSSDE,
             user_profile.plotCTAcquisitionMeanDLP,
             user_profile.plotCTAcquisitionCTDIvsMass,
             user_profile.plotCTAcquisitionDLPvsMass,
             user_profile.plotCTAcquisitionCTDIOverTime,
+            user_profile.plotCTAcquisitionSSDEOverTime,
             user_profile.plotCTAcquisitionDLPOverTime,
         ]
         if any(charts_of_interest):
@@ -779,8 +907,10 @@ def ct_plot_calculations(f, user_profile, return_as_dict=False):
                 user_profile.plotCTStandardAcquisitionFreq,
                 user_profile.plotCTStandardAcquisitionMeanDLP,
                 user_profile.plotCTStandardAcquisitionMeanCTDI,
+                user_profile.plotCTStandardAcquisitionMeanSSDE,
                 user_profile.plotCTStandardAcquisitionDLPOverTime,
                 user_profile.plotCTStandardAcquisitionCTDIOverTime,
+                user_profile.plotCTStandardAcquisitionSSDEOverTime,
                 user_profile.plotCTStandardAcquisitionDLPvsMass,
                 user_profile.plotCTStandardAcquisitionCTDIvsMass,
             ]
@@ -817,6 +947,20 @@ def ct_plot_calculations(f, user_profile, return_as_dict=False):
             value_fields.append("ctradiationdose__ctirradiationeventdata__mean_ctdivol")
 
         charts_of_interest = [
+            user_profile.plotCTAcquisitionMeanSSDE,
+            user_profile.plotCTAcquisitionSSDEOverTime,
+        ]
+        if enable_standard_names:
+            charts_of_interest.append(user_profile.plotCTStandardAcquisitionMeanSSDE)
+            charts_of_interest.append(
+                user_profile.plotCTStandardAcquisitionSSDEOverTime
+            )
+        if any(charts_of_interest):
+            value_fields.append(
+                "ctradiationdose__ctirradiationeventdata__sizespecificdoseestimation__size_specific_dose_estimation"
+            )
+
+        charts_of_interest = [
             user_profile.plotCTAcquisitionCTDIvsMass,
             user_profile.plotCTAcquisitionDLPvsMass,
         ]
@@ -831,6 +975,7 @@ def ct_plot_calculations(f, user_profile, return_as_dict=False):
 
         charts_of_interest = [
             user_profile.plotCTAcquisitionCTDIOverTime,
+            user_profile.plotCTAcquisitionSSDEOverTime,
             user_profile.plotCTAcquisitionDLPOverTime,
         ]
         if enable_standard_names:
@@ -838,6 +983,7 @@ def ct_plot_calculations(f, user_profile, return_as_dict=False):
             charts_of_interest.append(
                 user_profile.plotCTStandardAcquisitionCTDIOverTime
             )
+            charts_of_interest.append(user_profile.plotCTAcquisitionSSDEOverTime)
         if any(charts_of_interest):
             date_fields.append("study_date")
 
@@ -946,6 +1092,37 @@ def ct_plot_calculations(f, user_profile, return_as_dict=False):
             variable_name_start = "acquisition"
             modality_text = "CT"
             variable_value_name = "CTDI"
+
+            new_charts = generate_average_chart_group(
+                average_choices,
+                chart_message,
+                df,
+                modality_text,
+                name_field,
+                name_text,
+                return_as_dict,
+                return_structure,
+                units_text,
+                user_profile,
+                value_field,
+                value_text,
+                variable_name_start,
+                variable_value_name,
+                user_profile.plotCTInitialSortingChoice,
+            )
+
+            return_structure = {**return_structure, **new_charts}
+
+        if user_profile.plotCTAcquisitionMeanSSDE:
+
+            name_field = "ctradiationdose__ctirradiationeventdata__acquisition_protocol"
+            value_field = "ctradiationdose__ctirradiationeventdata__sizespecificdoseestimation__size_specific_dose_estimation"
+            value_text = "SSDE"
+            units_text = "(mGy)"
+            name_text = "Acquisition protocol"
+            variable_name_start = "acquisition"
+            modality_text = "CT"
+            variable_value_name = "SSDE"
 
             new_charts = generate_average_chart_group(
                 average_choices,
@@ -1080,6 +1257,43 @@ def ct_plot_calculations(f, user_profile, return_as_dict=False):
             if user_profile.plotMedian:
                 return_structure["acquisitionMedianCTDIOverTime"] = result["median"]
 
+        if user_profile.plotCTAcquisitionSSDEOverTime:
+            facet_title = "System"
+
+            if user_profile.plotGroupingChoice == "series":
+                facet_title = "Acquisition protocol"
+
+            parameter_dict = {
+                "df_name_col": "ctradiationdose__ctirradiationeventdata__acquisition_protocol",
+                "df_value_col": "ctradiationdose__ctirradiationeventdata__sizespecificdoseestimation__size_specific_dose_estimation",
+                "df_date_col": "study_date",
+                "name_title": "Acquisition protocol",
+                "value_title": "SSDE (mGy)",
+                "date_title": "Study date",
+                "facet_title": facet_title,
+                "sorting_choice": [
+                    user_profile.plotInitialSortingDirection,
+                    user_profile.plotCTInitialSortingChoice,
+                ],
+                "time_period": plot_timeunit_period,
+                "average_choices": average_choices + ["count"],
+                "grouping_choice": user_profile.plotGroupingChoice,
+                "colourmap": user_profile.plotColourMapChoice,
+                "facet_col_wrap": user_profile.plotFacetColWrapVal,
+                "filename": "OpenREM CT acquisition protocol SSDE over time",
+                "return_as_dict": return_as_dict,
+                "custom_msg_line": chart_message,
+            }
+            result = construct_over_time_charts(
+                df,
+                parameter_dict,
+            )
+
+            if user_profile.plotMean:
+                return_structure["acquisitionMeanSSDEOverTime"] = result["mean"]
+            if user_profile.plotMedian:
+                return_structure["acquisitionMedianSSDEOverTime"] = result["median"]
+
         if user_profile.plotCTAcquisitionDLPOverTime:
             facet_title = "System"
 
@@ -1122,8 +1336,10 @@ def ct_plot_calculations(f, user_profile, return_as_dict=False):
                 user_profile.plotCTStandardAcquisitionFreq,
                 user_profile.plotCTStandardAcquisitionMeanDLP,
                 user_profile.plotCTStandardAcquisitionMeanCTDI,
+                user_profile.plotCTStandardAcquisitionMeanSSDE,
                 user_profile.plotCTStandardAcquisitionDLPOverTime,
                 user_profile.plotCTStandardAcquisitionCTDIOverTime,
+                user_profile.plotCTStandardAcquisitionSSDEOverTime,
                 user_profile.plotCTStandardAcquisitionDLPvsMass,
                 user_profile.plotCTStandardAcquisitionCTDIvsMass,
             ]
@@ -1242,6 +1458,39 @@ def ct_plot_calculations(f, user_profile, return_as_dict=False):
 
                     return_structure = {**return_structure, **new_charts}
 
+                if user_profile.plotCTStandardAcquisitionMeanSSDE:
+                    name_field = "ctradiationdose__ctirradiationeventdata__standard_protocols__standard_name"
+                    value_field = (
+                        "ctradiationdose__ctirradiationeventdata__sizespecificdoseestimation__size_specific_dose_estimation"
+                    )
+                    value_text = "SSDE"
+                    units_text = "(mGy)"
+                    name_text = "Standard acquisition name"
+                    variable_name_start = "standardAcquisition"
+                    variable_value_name = "SSDE"
+                    modality_text = "CT"
+                    chart_message = ""
+
+                    new_charts = generate_average_chart_group(
+                        average_choices,
+                        chart_message,
+                        df_without_blanks,
+                        modality_text,
+                        name_field,
+                        name_text,
+                        return_as_dict,
+                        return_structure,
+                        units_text,
+                        user_profile,
+                        value_field,
+                        value_text,
+                        variable_name_start,
+                        variable_value_name,
+                        user_profile.plotCTInitialSortingChoice,
+                    )
+
+                    return_structure = {**return_structure, **new_charts}
+
                 if user_profile.plotCTStandardAcquisitionCTDIOverTime:
                     facet_title = "System"
 
@@ -1280,6 +1529,47 @@ def ct_plot_calculations(f, user_profile, return_as_dict=False):
                         )
                     if user_profile.plotMedian:
                         return_structure["standardAcquisitionMedianCTDIOverTime"] = (
+                            result["median"]
+                        )
+
+                if user_profile.plotCTStandardAcquisitionSSDEOverTime:
+                    facet_title = "System"
+
+                    if user_profile.plotGroupingChoice == "series":
+                        facet_title = "Standard acquisition name"
+
+                    parameter_dict = {
+                        "df_name_col": "ctradiationdose__ctirradiationeventdata__standard_protocols__standard_name",
+                        "df_value_col": "ctradiationdose__ctirradiationeventdata__sizespecificdoseestimation__size_specific_dose_estimation",
+                        "df_date_col": "study_date",
+                        "name_title": "Standard acquisition name",
+                        "value_title": "SSDE (mGy)",
+                        "date_title": "Study date",
+                        "facet_title": facet_title,
+                        "sorting_choice": [
+                            user_profile.plotInitialSortingDirection,
+                            user_profile.plotCTInitialSortingChoice,
+                        ],
+                        "time_period": plot_timeunit_period,
+                        "average_choices": average_choices + ["count"],
+                        "grouping_choice": user_profile.plotGroupingChoice,
+                        "colourmap": user_profile.plotColourMapChoice,
+                        "facet_col_wrap": user_profile.plotFacetColWrapVal,
+                        "filename": "OpenREM CT standard acquisition name SSDE over time",
+                        "return_as_dict": return_as_dict,
+                        "custom_msg_line": chart_message,
+                    }
+                    result = construct_over_time_charts(
+                        df_without_blanks,
+                        parameter_dict,
+                    )
+
+                    if user_profile.plotMean:
+                        return_structure["standardAcquisitionMeanSSDEOverTime"] = (
+                            result["mean"]
+                        )
+                    if user_profile.plotMedian:
+                        return_structure["standardAcquisitionMedianSSDEOverTime"] = (
                             result["median"]
                         )
 

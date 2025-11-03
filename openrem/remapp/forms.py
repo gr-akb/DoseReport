@@ -319,6 +319,10 @@ class CTChartOptionsForm(forms.Form):
         label=mark_safe(_("Acquisition CTDI<sub>vol</sub>")), required=False  # nosec
     )
     plotCTAcquisitionMeanCTDI.group = "Acquisition protocol"
+    plotCTAcquisitionMeanSSDE = forms.BooleanField(
+        label=_("Acquisition SSDE"), required=False
+    )
+    plotCTAcquisitionMeanSSDE.group = "Acquisition protocol"
     plotCTAcquisitionDLPOverTime = forms.BooleanField(
         label=_("Acquisition DLP over time"), required=False
     )
@@ -328,6 +332,11 @@ class CTChartOptionsForm(forms.Form):
         required=False,
     )
     plotCTAcquisitionCTDIOverTime.group = "Acquisition protocol"
+    plotCTAcquisitionSSDEOverTime = forms.BooleanField(
+        label=_("Acquisition SSDE over time"),
+        required=False,
+    )
+    plotCTAcquisitionSSDEOverTime.group = "Acquisition protocol"
     plotCTAcquisitionDLPvsMass = forms.BooleanField(
         label=_("Acquisition DLP vs mass"), required=False
     )
@@ -411,6 +420,10 @@ class CTChartOptionsFormIncStandard(CTChartOptionsForm):
         required=False,
     )
     plotCTStandardAcquisitionCTDIOverTime.group = "Standard acquisition name"
+    plotCTStandardAcquisitionSSDEOverTime = forms.BooleanField(
+        label="Standard acquisition name SSDE over time", required=False
+    )
+    plotCTStandardAcquisitionSSDEOverTime.group = "Standard acquisition name"
     plotCTStandardAcquisitionDLPvsMass = forms.BooleanField(
         label="Standard acquisition name DLP vs mass", required=False
     )
@@ -1016,11 +1029,18 @@ class CTChartOptionsDisplayForm(forms.Form):
     plotCTAcquisitionMeanCTDI = forms.BooleanField(
         label=mark_safe(_("Acquisition CTDI<sub>vol</sub>")), required=False  # nosec
     )
+    plotCTAcquisitionMeanSSDE = forms.BooleanField(
+        label=_("Acquisition SSDE"), required=False
+    )
     plotCTAcquisitionDLPOverTime = forms.BooleanField(
         label=_("Acquisition DLP over time"), required=False
     )
     plotCTAcquisitionCTDIOverTime = forms.BooleanField(
         label=mark_safe(_("Acquisition CTDI<sub>vol</sub> over time")),  # nosec
+        required=False,
+    )
+    plotCTAcquisitionSSDEOverTime = forms.BooleanField(
+        label=_("Acquisition SSDE over time"),
         required=False,
     )
     plotCTAcquisitionDLPvsMass = forms.BooleanField(
@@ -1093,6 +1113,9 @@ class CTChartOptionsDisplayFormIncStandard(CTChartOptionsDisplayForm):
         ),
         required=False,
     )
+    plotCTStandardAcquisitionSSDEOverTime = forms.BooleanField(
+        label="Standard acquisition name SSDE over time", required=False
+    )
     plotCTStandardAcquisitionCTDIvsMass = forms.BooleanField(
         label=mark_safe(  # nosec
             "Standard acquisition name CTDI<sub>vol</sub> vs mass"
@@ -1123,8 +1146,10 @@ class CTChartOptionsDisplayFormIncStandard(CTChartOptionsDisplayForm):
         "plotCTAcquisitionFreq",
         "plotCTAcquisitionMeanDLP",
         "plotCTAcquisitionMeanCTDI",
+        "plotCTAcquisitionMeanSSDE"
         "plotCTAcquisitionDLPOverTime",
         "plotCTAcquisitionCTDIOverTime",
+        "plotCTAcquisitionSSDEOverTime",
         "plotCTAcquisitionDLPvsMass",
         "plotCTAcquisitionCTDIvsMass",
         "plotCTAcquisitionTypes",
@@ -1133,11 +1158,13 @@ class CTChartOptionsDisplayFormIncStandard(CTChartOptionsDisplayForm):
         "plotCTStandardAcquisitionMeanCTDI",
         "plotCTStandardAcquisitionDLPOverTime",
         "plotCTStandardAcquisitionCTDIOverTime",
+        "plotCTStandardAcquisitionSSDEOverTime",
         "plotCTStandardAcquisitionDLPvsMass",
         "plotCTStandardAcquisitionCTDIvsMass",
         "plotCTStudyFreq",
         "plotCTStudyMeanDLP",
         "plotCTStudyMeanCTDI",
+        "plotCTStudyMeanSSDE",
         "plotCTStudyNumEvents",
         "plotCTStudyMeanDLPOverTime",
         "plotCTStudyPerDayAndHour",

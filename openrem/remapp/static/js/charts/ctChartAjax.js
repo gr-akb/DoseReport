@@ -120,6 +120,50 @@ $(document).ready(function() {
                 $("#standardAcquisitionMedianCTDIOverTimeChartDiv").html(json.standardAcquisitionMedianCTDIOverTime);
             }
 
+            // SSDE per acquisition chart data
+            if(typeof json.acquisitionMeanSSDEData !== "undefined") {
+                updateBarCharts("acquisitionMeanSSDE", json);
+            }
+            if(typeof json.acquisitionMedianSSDEData !== "undefined") {
+                updateBarCharts("acquisitionMedianSSDE", json);
+            }
+            if(typeof json.acquisitionBoxplotSSDEData !=="undefined") {
+                $("#acquisitionBoxplotSSDEChartDiv").html(json.acquisitionBoxplotSSDEData);
+            }
+            if(typeof json.acquisitionHistogramSSDEData !=="undefined") {
+                $("#acquisitionHistogramSSDEChartDiv").html(json.acquisitionHistogramSSDEData);
+            }
+
+            // SSDE per standard acquisition name chart data
+            if(typeof json.standardAcquisitionMeanSSDEData !== "undefined") {
+                updateBarCharts("standardAcquisitionMeanSSDE", json);
+            }
+            if(typeof json.standardAcquisitionMedianSSDEData !== "undefined") {
+                updateBarCharts("standardAcquisitionMedianSSDE", json);
+            }
+            if(typeof json.standardAcquisitionBoxplotSSDEData !=="undefined") {
+                $("#standardAcquisitionBoxplotSSDEChartDiv").html(json.standardAcquisitionBoxplotSSDEData);
+            }
+            if(typeof json.standardAcquisitionHistogramSSDEData !=="undefined") {
+                $("#standardAcquisitionHistogramSSDEChartDiv").html(json.standardAcquisitionHistogramSSDEData);
+            }
+
+            // Acquisition SSDE over time chart data
+            if(typeof json.acquisitionMeanSSDEOverTime !== "undefined") {
+                $("#acquisitionMeanSSDEOverTimeChartDiv").html(json.acquisitionMeanSSDEOverTime);
+            }
+            if(typeof json.acquisitionMedianSSDEOverTime !== "undefined") {
+                $("#acquisitionMedianSSDEOverTimeChartDiv").html(json.acquisitionMedianSSDEOverTime);
+            }
+
+            // Standard acquisition name SSDE over time chart data
+            if(typeof json.standardAcquisitionMeanSSDEOverTime !== "undefined") {
+                $("#standardAcquisitionMeanSSDEOverTimeChartDiv").html(json.standardAcquisitionMeanSSDEOverTime);
+            }
+            if(typeof json.standardAcquisitionMedianSSDEOverTime !== "undefined") {
+                $("#standardAcquisitionMedianSSDEOverTimeChartDiv").html(json.standardAcquisitionMedianSSDEOverTime);
+            }
+
             // Acquisition DLP over time chart data
             if(typeof json.acquisitionMeanDLPOverTime !== "undefined") {
                 $("#acquisitionMeanDLPOverTimeChartDiv").html(json.acquisitionMeanDLPOverTime);

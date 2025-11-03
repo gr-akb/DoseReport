@@ -715,16 +715,20 @@ class UserProfile(models.Model, CommonVariables):
 
     plotCTAcquisitionMeanDLP = models.BooleanField(default=True)
     plotCTAcquisitionMeanCTDI = models.BooleanField(default=True)
+    plotCTAcquisitionMeanSSDE = models.BooleanField(default=True)
     plotCTAcquisitionFreq = models.BooleanField(default=False)
     plotCTAcquisitionCTDIvsMass = models.BooleanField(default=False)
     plotCTAcquisitionDLPvsMass = models.BooleanField(default=False)
     plotCTAcquisitionCTDIOverTime = models.BooleanField(default=False)
+    plotCTAcquisitionSSDEOverTime = models.BooleanField(default=False)
     plotCTAcquisitionDLPOverTime = models.BooleanField(default=False)
     plotCTStandardAcquisitionFreq = models.BooleanField(default=False)
     plotCTStandardAcquisitionMeanDLP = models.BooleanField(default=False)
     plotCTStandardAcquisitionMeanCTDI = models.BooleanField(default=False)
+    plotCTStandardAcquisitionMeanSSDE = models.BooleanField(default=False)
     plotCTStandardAcquisitionDLPOverTime = models.BooleanField(default=False)
     plotCTStandardAcquisitionCTDIOverTime = models.BooleanField(default=False)
+    plotCTStandardAcquisitionSSDEOverTime = models.BooleanField(default=False)
     plotCTStandardAcquisitionCTDIvsMass = models.BooleanField(default=False)
     plotCTStandardAcquisitionDLPvsMass = models.BooleanField(default=False)
     plotCTStudyMeanDLP = models.BooleanField(default=True)
@@ -3063,8 +3067,8 @@ class SizeSpecificDoseEstimation(models.Model):
 
 class SsdeLongitudinalPositionDetail(models.Model):
     """Container in TID 10013 to hold size specific dose estimation details per longitudinal position Z"""
-    ct_irradiation_event_data = models.ForeignKey(
-        CtIrradiationEventData, on_delete=models.CASCADE
+    size_specific_dose_estimation = models.ForeignKey(
+        SizeSpecificDoseEstimation, on_delete=models.CASCADE
     )
     ssde_at_longitudinal_z = models.DecimalField(
         max_digits=16, decimal_places=8, blank=True, null=True
@@ -3075,6 +3079,15 @@ class SsdeLongitudinalPositionDetail(models.Model):
     wed_at_longitudional_z = models.DecimalField(
         max_digits=16, decimal_places=8, blank=True, null=True
     )
+
+    class Meta:
+        indexes = [
+            models.Index(
+                fields=[
+                    "size_specific_dose_estimation",
+                ]
+            ),
+        ]
 
 
 class WEDSeriesOrInstances(models.Model):
