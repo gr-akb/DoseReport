@@ -3937,41 +3937,6 @@ class ChartsCT(TestCase):
                 ),
             },
             {
-                "name": "10.13 RADIOTHERAPY QA",
-                "text": np.array(
-                    [
-                        "0.14≤x<22.39",
-                        "22.39≤x<44.63",
-                        "44.63≤x<66.88",
-                        "66.88≤x<89.12",
-                        "89.12≤x<111.37",
-                        "111.37≤x<133.61",
-                        "133.61≤x<155.85",
-                        "155.85≤x<178.10",
-                        "178.10≤x<200.34",
-                        "200.34≤x<222.59",
-                    ],
-                    dtype="<U15",
-                ),
-                "x": np.array(
-                    [
-                        11.2625,
-                        33.5075,
-                        55.7525,
-                        77.9975,
-                        100.2425,
-                        122.4875,
-                        144.7325,
-                        166.9775,
-                        189.2225,
-                        211.4675,
-                    ],
-                ),
-                "y": np.array(
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                ),
-            },
-            {
                 "name": "DE_laser align",
                 "text": np.array(
                     [
@@ -4074,6 +4039,41 @@ class ChartsCT(TestCase):
                 ),
                 "y": np.array(
                     [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+                ),
+            },
+            {
+                "name": "10.13 RADIOTHERAPY QA",
+                "text": np.array(
+                    [
+                        "0.14≤x<22.39",
+                        "22.39≤x<44.63",
+                        "44.63≤x<66.88",
+                        "66.88≤x<89.12",
+                        "89.12≤x<111.37",
+                        "111.37≤x<133.61",
+                        "133.61≤x<155.85",
+                        "155.85≤x<178.10",
+                        "178.10≤x<200.34",
+                        "200.34≤x<222.59",
+                    ],
+                    dtype="<U15",
+                ),
+                "x": np.array(
+                    [
+                        11.2625,
+                        33.5075,
+                        55.7525,
+                        77.9975,
+                        100.2425,
+                        122.4875,
+                        144.7325,
+                        166.9775,
+                        189.2225,
+                        211.4675,
+                    ],
+                ),
+                "y": np.array(
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                 ),
             },
             {
@@ -5205,7 +5205,7 @@ class ChartsCT(TestCase):
             check_boxplot_data(self, chart_data, standard_data)
 
             # Check the histogram data
-            standard_data1 = [
+            standard_data2 = [
                 {
                     "name": "Blank",
                     "text": np.array(
@@ -5822,7 +5822,7 @@ class ChartsCT(TestCase):
 
             chart_data2 = self.chart_data["acquisitionHistogramCTDIData"]["data"]
 
-            for idx, dataset in enumerate(standard_data1):
+            for idx, dataset in enumerate(standard_data2):
                 self.assertEqual(chart_data2[idx]["name"], dataset["name"])
                 np.testing.assert_almost_equal(
                     chart_data2[idx]["x"], dataset["x"], decimal=6
