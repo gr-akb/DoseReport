@@ -61,6 +61,7 @@ definitions:
           - >-
             sed -i "/^LOG_ROOT/c\LOG_ROOT = ''" openrem/openremproject/local_settings.py
           - mv openrem/openremproject/wsgi.py{.example,}
+          - pip install setuptools
           - pip install -e .
           - pip install coverage
           - pip install coveralls
@@ -100,6 +101,7 @@ definitions:
           - >-
             sed -i "/^LOG_ROOT/c\LOG_ROOT = ''" openrem/openremproject/local_settings.py
           - mv openrem/openremproject/wsgi.py{.example,}
+          - pip install setuptools
           - pip install -e .
           - pip install coverage
           - pip install coveralls
@@ -138,6 +140,7 @@ definitions:
           - >-
             sed -i "/^LOG_ROOT/c\LOG_ROOT = ''" openrem/openremproject/local_settings.py
           - mv openrem/openremproject/wsgi.py{.example,}
+          - pip install setuptools
           - pip install -e .
           - pip install coverage
           - pip install coveralls
