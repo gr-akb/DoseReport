@@ -528,37 +528,169 @@ def mg_plot_calculations(f, user_profile, return_as_dict=False):
         # Addressing issue 1050 (https://bitbucket.org/openrem/openrem/issues/1050)
         # Filter data frame using acquisition protocol name,  min / max compression thickness,
         # standard acquisition name, image view code, and exposure control mode filters.
-        if "projectionxrayradiationdose__irradeventxraydata__irradeventxraymechanicaldata__compression_thickness__range_min" in f.data:
-            if f.data["projectionxrayradiationdose__irradeventxraydata__irradeventxraymechanicaldata__compression_thickness__range_min"]:
-                df = df[df["projectionxrayradiationdose__irradeventxraydata__irradeventxraymechanicaldata__compression_thickness"] >= float(f.data["projectionxrayradiationdose__irradeventxraydata__irradeventxraymechanicaldata__compression_thickness__range_min"])]
+        if (
+            "projectionxrayradiationdose__irradeventxraydata__irradeventxraymechanicaldata__compression_thickness__range_min"
+            in f.data
+        ):
+            if f.data[
+                "projectionxrayradiationdose__irradeventxraydata__irradeventxraymechanicaldata__compression_thickness__range_min"
+            ]:
+                df = df[
+                    df[
+                        "projectionxrayradiationdose__irradeventxraydata__irradeventxraymechanicaldata__compression_thickness"
+                    ]
+                    >= float(
+                        f.data[
+                            "projectionxrayradiationdose__irradeventxraydata__irradeventxraymechanicaldata__compression_thickness__range_min"
+                        ]
+                    )
+                ]
 
-        if "projectionxrayradiationdose__irradeventxraydata__irradeventxraymechanicaldata__compression_thickness__range_max" in f.data:
-            if f.data["projectionxrayradiationdose__irradeventxraydata__irradeventxraymechanicaldata__compression_thickness__range_max"]:
-                df = df[df["projectionxrayradiationdose__irradeventxraydata__irradeventxraymechanicaldata__compression_thickness"] <= float(f.data["projectionxrayradiationdose__irradeventxraydata__irradeventxraymechanicaldata__compression_thickness__range_max"])]
+        if (
+            "projectionxrayradiationdose__irradeventxraydata__irradeventxraymechanicaldata__compression_thickness__range_max"
+            in f.data
+        ):
+            if f.data[
+                "projectionxrayradiationdose__irradeventxraydata__irradeventxraymechanicaldata__compression_thickness__range_max"
+            ]:
+                df = df[
+                    df[
+                        "projectionxrayradiationdose__irradeventxraydata__irradeventxraymechanicaldata__compression_thickness"
+                    ]
+                    <= float(
+                        f.data[
+                            "projectionxrayradiationdose__irradeventxraydata__irradeventxraymechanicaldata__compression_thickness__range_max"
+                        ]
+                    )
+                ]
 
-        if "projectionxrayradiationdose__irradeventxraydata__acquisition_protocol" in f.data:
-            if f.data["projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"]:
-                df["projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"] = df["projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"].astype("object")
-                df = df[df["projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"].str.contains(f.data["projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"], case=False)]
-                df["projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"] = df["projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"].astype("category")
+        if (
+            "projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"
+            in f.data
+        ):
+            if f.data[
+                "projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"
+            ]:
+                df[
+                    "projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"
+                ] = df[
+                    "projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"
+                ].astype(
+                    "object"
+                )
+                df = df[
+                    df[
+                        "projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"
+                    ].str.contains(
+                        f.data[
+                            "projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"
+                        ],
+                        case=False,
+                    )
+                ]
+                df[
+                    "projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"
+                ] = df[
+                    "projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"
+                ].astype(
+                    "category"
+                )
 
-        if "projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name" in f.data:
-            if f.data["projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"]:
-                df["projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"] = df["projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"].astype("object")
-                df = df[df["projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"].str.contains(f.data["projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"], case=False)]
-                df["projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"] = df["projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"].astype("category")
+        if (
+            "projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"
+            in f.data
+        ):
+            if f.data[
+                "projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"
+            ]:
+                df[
+                    "projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"
+                ] = df[
+                    "projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"
+                ].astype(
+                    "object"
+                )
+                df = df[
+                    df[
+                        "projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"
+                    ].str.contains(
+                        f.data[
+                            "projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"
+                        ],
+                        case=False,
+                    )
+                ]
+                df[
+                    "projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"
+                ] = df[
+                    "projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"
+                ].astype(
+                    "category"
+                )
 
-        if "projectionxrayradiationdose__irradeventxraydata__image_view__code_meaning" in f.data:
-            if f.data["projectionxrayradiationdose__irradeventxraydata__image_view__code_meaning"]:
-                df["projectionxrayradiationdose__irradeventxraydata__image_view__code_meaning"] = df["projectionxrayradiationdose__irradeventxraydata__image_view__code_meaning"].astype("object")
-                df = df[df["projectionxrayradiationdose__irradeventxraydata__image_view__code_meaning"].str.contains(f.data["projectionxrayradiationdose__irradeventxraydata__image_view__code_meaning"], case=False)]
-                df["projectionxrayradiationdose__irradeventxraydata__image_view__code_meaning"] = df["projectionxrayradiationdose__irradeventxraydata__image_view__code_meaning"].astype("category")
+        if (
+            "projectionxrayradiationdose__irradeventxraydata__image_view__code_meaning"
+            in f.data
+        ):
+            if f.data[
+                "projectionxrayradiationdose__irradeventxraydata__image_view__code_meaning"
+            ]:
+                df[
+                    "projectionxrayradiationdose__irradeventxraydata__image_view__code_meaning"
+                ] = df[
+                    "projectionxrayradiationdose__irradeventxraydata__image_view__code_meaning"
+                ].astype(
+                    "object"
+                )
+                df = df[
+                    df[
+                        "projectionxrayradiationdose__irradeventxraydata__image_view__code_meaning"
+                    ].str.contains(
+                        f.data[
+                            "projectionxrayradiationdose__irradeventxraydata__image_view__code_meaning"
+                        ],
+                        case=False,
+                    )
+                ]
+                df[
+                    "projectionxrayradiationdose__irradeventxraydata__image_view__code_meaning"
+                ] = df[
+                    "projectionxrayradiationdose__irradeventxraydata__image_view__code_meaning"
+                ].astype(
+                    "category"
+                )
 
-        if "projectionxrayradiationdose__irradeventxraydata__irradeventxraysourcedata__exposure_control_mode" in f.data:
-            if f.data["projectionxrayradiationdose__irradeventxraydata__irradeventxraysourcedata__exposure_control_mode"]:
-                df["projectionxrayradiationdose__irradeventxraydata__irradeventxraysourcedata__exposure_control_mode"] = df["projectionxrayradiationdose__irradeventxraydata__irradeventxraysourcedata__exposure_control_mode"].astype("object")
-                df = df[df["projectionxrayradiationdose__irradeventxraydata__irradeventxraysourcedata__exposure_control_mode"].str.contains(f.data["projectionxrayradiationdose__irradeventxraydata__irradeventxraysourcedata__exposure_control_mode"], case=False)]
-                df["projectionxrayradiationdose__irradeventxraydata__irradeventxraysourcedata__exposure_control_mode"] = df["projectionxrayradiationdose__irradeventxraydata__irradeventxraysourcedata__exposure_control_mode"].astype("category")
+        if (
+            "projectionxrayradiationdose__irradeventxraydata__irradeventxraysourcedata__exposure_control_mode"
+            in f.data
+        ):
+            if f.data[
+                "projectionxrayradiationdose__irradeventxraydata__irradeventxraysourcedata__exposure_control_mode"
+            ]:
+                df[
+                    "projectionxrayradiationdose__irradeventxraydata__irradeventxraysourcedata__exposure_control_mode"
+                ] = df[
+                    "projectionxrayradiationdose__irradeventxraydata__irradeventxraysourcedata__exposure_control_mode"
+                ].astype(
+                    "object"
+                )
+                df = df[
+                    df[
+                        "projectionxrayradiationdose__irradeventxraydata__irradeventxraysourcedata__exposure_control_mode"
+                    ].str.contains(
+                        f.data[
+                            "projectionxrayradiationdose__irradeventxraydata__irradeventxraysourcedata__exposure_control_mode"
+                        ],
+                        case=False,
+                    )
+                ]
+                df[
+                    "projectionxrayradiationdose__irradeventxraydata__irradeventxraysourcedata__exposure_control_mode"
+                ] = df[
+                    "projectionxrayradiationdose__irradeventxraydata__irradeventxraysourcedata__exposure_control_mode"
+                ].astype(
+                    "category"
+                )
         #######################################################################
 
         if user_profile.plotMGaverageAGDvsThickness or user_profile.plotMGaverageAGD:

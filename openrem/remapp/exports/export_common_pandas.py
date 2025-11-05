@@ -1068,7 +1068,9 @@ def transform_to_one_row_per_exam(
     )
     exam_field_names.append(g)
     df = df.set_index(exam_field_names).unstack().sort_index(axis=1, level=1)
-    df.columns = ["E{} {}".format(b, a) for a, b in df.columns]  # pylint: disable=consider-using-f-string
+    df.columns = [
+        "E{} {}".format(b, a) for a, b in df.columns
+    ]  # pylint: disable=consider-using-f-string
     df = df.reset_index()
 
     # Set datatypes of the exam-level integer and value fields again because the reformat undoes the earlier changes
@@ -1102,7 +1104,8 @@ def create_standard_name_df_columns(df):
         )
         num_std_name_cols = len(std_name_df.columns)
         std_name_df.columns = [
-            "Standard study name {}".format(a + 1) for a in std_name_df.columns  # pylint: disable=consider-using-f-string
+            "Standard study name {}".format(a + 1)
+            for a in std_name_df.columns  # pylint: disable=consider-using-f-string
         ]
         std_name_df = std_name_df.reset_index()
 
@@ -1900,7 +1903,10 @@ def create_multiindex_columns(
     df_pivot = df_unprocessed_organ_dose.pivot_table(
         index="Acquisition pk",
         fill_value="",
-        columns=df_unprocessed_organ_dose.groupby("Acquisition pk", observed=False).cumcount() + 1,
+        columns=df_unprocessed_organ_dose.groupby(
+            "Acquisition pk", observed=False
+        ).cumcount()
+        + 1,
         values=secondary_field_names_list,
         aggfunc="first",
     )
@@ -1972,28 +1978,36 @@ def create_mg_pulse_columns(df_unprocessed, acquisition_val_field_names):
         .drop_duplicates(["Acquisition pk", "kVp pk"])
         .sort_values(by=["kVp pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"], observed=False)["kVp"]
-        .transform(lambda x: " | ".join(map("{:.2f}".format, x[1:])))  # pylint disable=unnecessary-lambda
+        .transform(
+            lambda x: " | ".join(map("{:.2f}".format, x[1:]))
+        )  # pylint disable=unnecessary-lambda
     )
     df_unprocessed["uAs other pulses"] = (  # pylint disable=unnecessary-lambda
         df_unprocessed[df_unprocessed["uAs"].notnull()]
         .drop_duplicates(["Acquisition pk", "exposure pk"])
         .sort_values(by=["exposure pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"], observed=False)["uAs"]
-        .transform(lambda x: " | ".join(map(str, x[1:])))  # pylint disable=unnecessary-lambda
+        .transform(
+            lambda x: " | ".join(map(str, x[1:]))
+        )  # pylint disable=unnecessary-lambda
     )
     df_unprocessed["ms other pulses"] = (  # pylint disable=unnecessary-lambda
         df_unprocessed[df_unprocessed["ms"].notnull()]
         .drop_duplicates(["Acquisition pk", "pulsewidth pk"])
         .sort_values(by=["pulsewidth pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"], observed=False)["ms"]
-        .transform(lambda x: " | ".join(map("{:.2f}".format, x[1:])))  # pylint disable=unnecessary-lambda
+        .transform(
+            lambda x: " | ".join(map("{:.2f}".format, x[1:]))
+        )  # pylint disable=unnecessary-lambda
     )
     df_unprocessed["mA other pulses"] = (  # pylint disable=unnecessary-lambda
         df_unprocessed[df_unprocessed["mA"].notnull()]
         .drop_duplicates(["Acquisition pk", "xraytubecurrent pk"])
         .sort_values(by=["xraytubecurrent pk"], ascending=[True], inplace=False)
         .groupby(["Acquisition pk"], observed=False)["mA"]
-        .transform(lambda x: " | ".join(map("{:.2f}".format, x[1:])))  # pylint disable=unnecessary-lambda
+        .transform(
+            lambda x: " | ".join(map("{:.2f}".format, x[1:]))
+        )  # pylint disable=unnecessary-lambda
     )
 
     #######################################################
