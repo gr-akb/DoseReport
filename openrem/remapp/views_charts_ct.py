@@ -1545,7 +1545,9 @@ def ct_plot_calculations(f, user_profile, return_as_dict=False):
 
                     parameter_dict = {
                         "df_name_col": "ctradiationdose__ctirradiationeventdata__standard_protocols__standard_name",
-                        "df_value_col": "ctradiationdose__ctirradiationeventdata__sizespecificdoseestimation__size_specific_dose_estimation",
+                        "df_value_col": ("ctradiationdose__ctirradiationeventdata__sizespecificdoseestimation__size" +
+                                         "_specific_dose_estimation"
+                                        ),
                         "df_date_col": "study_date",
                         "name_title": "Standard acquisition name",
                         "value_title": "SSDE (mGy)",
