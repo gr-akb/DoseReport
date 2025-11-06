@@ -54,6 +54,7 @@ from django.db.models import Q, F, Avg
 from django.db.models.functions import Coalesce
 from xlsxwriter.workbook import Workbook
 
+from openremproject.settings import PREFERRED_ORDER_CT_SSDE_METHOD
 from ..models import (
     CtRadiationDose,
     Exports,
@@ -64,7 +65,6 @@ from ..models import (
 from ..version import __version__
 
 from ..tools.check_standard_name_status import are_standard_names_enabled
-from openremproject.settings import PREFERRED_ORDER_CT_SSDE_METHOD
 
 logger = logging.getLogger(__name__)
 

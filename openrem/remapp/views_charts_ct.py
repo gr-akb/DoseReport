@@ -1116,7 +1116,9 @@ def ct_plot_calculations(f, user_profile, return_as_dict=False):
         if user_profile.plotCTAcquisitionMeanSSDE:
 
             name_field = "ctradiationdose__ctirradiationeventdata__acquisition_protocol"
-            value_field = "ctradiationdose__ctirradiationeventdata__sizespecificdoseestimation__size_specific_dose_estimation"
+            value_field = ("ctradiationdose__ctirradiationeventdata__sizespecificdoseestimation__" +
+                           "size_specific_dose_estimation"
+                          )
             value_text = "SSDE"
             units_text = "(mGy)"
             name_text = "Acquisition protocol"
@@ -1265,7 +1267,9 @@ def ct_plot_calculations(f, user_profile, return_as_dict=False):
 
             parameter_dict = {
                 "df_name_col": "ctradiationdose__ctirradiationeventdata__acquisition_protocol",
-                "df_value_col": "ctradiationdose__ctirradiationeventdata__sizespecificdoseestimation__size_specific_dose_estimation",
+                "df_value_col": ("ctradiationdose__ctirradiationeventdata__sizespecificdoseestimation__" +
+                                 "size_specific_dose_estimation"
+                                ),
                 "df_date_col": "study_date",
                 "name_title": "Acquisition protocol",
                 "value_title": "SSDE (mGy)",
@@ -1461,7 +1465,8 @@ def ct_plot_calculations(f, user_profile, return_as_dict=False):
                 if user_profile.plotCTStandardAcquisitionMeanSSDE:
                     name_field = "ctradiationdose__ctirradiationeventdata__standard_protocols__standard_name"
                     value_field = (
-                        "ctradiationdose__ctirradiationeventdata__sizespecificdoseestimation__size_specific_dose_estimation"
+                        "ctradiationdose__ctirradiationeventdata__sizespecificdoseestimation__" +
+                        "size_specific_dose_estimation"
                     )
                     value_text = "SSDE"
                     units_text = "(mGy)"
