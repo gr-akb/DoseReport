@@ -79,7 +79,7 @@ definitions:
         caches:
           - pip
     - step: &test-slow
-        trigger: manual
+#        trigger: manual
         name: run django tests tagged as slow
         script:
           - mv openrem/openremproject/local_settings.py{.linux,}
