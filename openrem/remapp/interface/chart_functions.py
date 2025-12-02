@@ -1192,7 +1192,7 @@ def calc_histogram_bin_data(df, value_col_name, n_bins=10):
     :param n_bins: (int) the number of bins to use
     :return: a three element list containing the bin labels, bin boundaries and bin mid-points
     """
-    min_bin_value, max_bin_value = df[value_col_name].agg([min, max])
+    min_bin_value, max_bin_value = df[value_col_name].agg(["min", "max"])
     bins = np.linspace(min_bin_value, max_bin_value, n_bins + 1)
     mid_bins = 0.5 * (bins[:-1] + bins[1:])
     bin_labels = np.array(
