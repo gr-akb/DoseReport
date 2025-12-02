@@ -9,6 +9,7 @@ git clone git@bitbucket.org:openrem/openrem.git openrem-for-release
 
 
 Make sure develop is up to date, branch as release-version, eg release-0.9.0b5
+git checkout -b release-1.0.0b3
 Checkout the release-version branch
 
 Change the version number in

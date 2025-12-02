@@ -13,12 +13,12 @@ Collect installation files
 On a computer with internet access:
 
 * Install Docker - this is required to download the images
-* Download https://bitbucket.org/openrem/docker/get/develop.zip
+* Download https://bitbucket.org/openrem/docker/get/1.0.0b3.zip
 * Download the Docker images:
 
 .. code-block:: console
 
-    $ docker pull openrem/openrem:release-1.0.0b2
+    $ docker pull openrem/openrem:release-1.0.0b3
 
 .. code-block:: console
 

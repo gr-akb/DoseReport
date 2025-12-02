@@ -10,8 +10,8 @@ differently, it might be better to start afresh following or adapting the :doc:`
 
 If upgrading to a new host, follow the :doc:`upgrade_linux_new_server` docs.
 
-This release will run on Python 3.8 or 3.9, but Python 3.10 is recommended. If a different release of Python is being
-used, substitute 3.10 for that version where necessary below.
+This release will run on Python 3.10 or 3.11, but Python 3.12 is recommended. If a different release of Python is being
+used, substitute 3.12 for that version where necessary below.
 
 If you are upgrading OpenREM on a Linux server with limited internet access, go to the :doc:`install_offline` docs.
 
@@ -52,11 +52,11 @@ Update apt and install any updates:
 
     $ sudo -- sh -c 'apt update && apt upgrade'
 
-Install Python 3.10 and other packages:
+Install Python 3.12 and other packages:
 
 .. code-block:: console
 
-    $ sudo apt install acl python3.10 python3.10-dev python3.10-distutils python3.10-venv python3-pip \
+    $ sudo apt install acl python3.12 python3.12-dev python3.12-distutils python3.12-venv python3-pip \
     postgresql nginx orthanc dcmtk default-jre zip gettext
 
 Reset the permissions for the ``/var/dose`` folder:
@@ -92,7 +92,7 @@ Create a new Python virtual environment:
 
 .. code-block:: console
 
-    $ python3.10 -m venv /var/dose/veopenrem3
+    $ python3.12 -m venv /var/dose/veopenrem3
 
 Activate the virtualenv:
 
@@ -117,7 +117,7 @@ Upgrade Pip and install OpenREM
 
 .. code-block:: console
 
-    $ pip install openrem==1.0.0b1
+    $ pip install openrem==1.0.0b3
 
 .. _upgrade-linux-local-settings:
 
@@ -129,7 +129,7 @@ Navigate to the Python openrem folder and copy the example ``local_settings.py``
 
 .. code-block:: console
 
-    $ cd /var/dose/veopenrem3/lib/python3.10/site-packages/openrem/
+    $ cd /var/dose/veopenrem3/lib/python3.12/site-packages/openrem/
     $ cp openremproject/local_settings.py{.linux,}
     $ cp openremproject/wsgi.py{.example,}
 
@@ -230,7 +230,7 @@ In a shell/command window, move into the ``openrem`` folder:
 
 .. code-block:: console
 
-    $ cd /var/dose/veopenrem3/lib/python3.10/site-packages/openrem/
+    $ cd /var/dose/veopenrem3/lib/python3.12/site-packages/openrem/
 
 Prepare the migrations folder:
 
@@ -315,7 +315,7 @@ Edit the Gunicorn systemd file ``WorkingDirectory`` and ``ExecStart``:
 .. code-block:: none
     :emphasize-lines: 1,3
 
-    WorkingDirectory=/var/dose/veopenrem3/lib/python3.10/site-packages/openrem
+    WorkingDirectory=/var/dose/veopenrem3/lib/python3.12/site-packages/openrem
 
     ExecStart=/var/dose/veopenrem3/bin/gunicorn \
         --bind unix:/tmp/openrem-server.socket \

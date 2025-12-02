@@ -10,7 +10,7 @@ to use Docker, these instructions will guide you through upgrading an existing d
 
 This install is based on Ubuntu 22.04 using:
 
-* Python 3.10 running in a virtualenv
+* Python 3.12 running in a virtualenv
 * Database: PostgreSQL
 * DICOM Store SCP: Orthanc running on port 104
 * Webserver: NGINX with Gunicorn
