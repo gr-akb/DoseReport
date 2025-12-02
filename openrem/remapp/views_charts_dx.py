@@ -775,6 +775,93 @@ def dx_plot_calculations(f, user_profile, return_as_dict=False):
         )
         #######################################################################
 
+        #######################################################################
+        # Addressing issue 1050 (https://bitbucket.org/openrem/openrem/issues/1050)
+        # Filter data frame using acquisition protocol name, min / max event DAP,
+        # and standard acquisition name filters.
+        if "event_dap_min" in f.data:
+            if f.data["event_dap_min"]:
+                df = df[
+                    df[
+                        "projectionxrayradiationdose__irradeventxraydata__dose_area_product"
+                    ]
+                    >= float(f.data["event_dap_min"])
+                ]
+
+        if "event_dap_max" in f.data:
+            if f.data["event_dap_max"]:
+                df = df[
+                    df[
+                        "projectionxrayradiationdose__irradeventxraydata__dose_area_product"
+                    ]
+                    <= float(f.data["event_dap_max"])
+                ]
+
+        if (
+            "projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"
+            in f.data
+        ):
+            if f.data[
+                "projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"
+            ]:
+                df[
+                    "projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"
+                ] = df[
+                    "projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"
+                ].astype(
+                    "object"
+                )
+                df = df[
+                    df[
+                        "projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"
+                    ].str.contains(
+                        f.data[
+                            "projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"
+                        ],
+                        case=False,
+                    )
+                ]
+                df[
+                    "projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"
+                ] = df[
+                    "projectionxrayradiationdose__irradeventxraydata__acquisition_protocol"
+                ].astype(
+                    "category"
+                )
+
+        if (
+            "projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"
+            in f.data
+        ):
+            if f.data[
+                "projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"
+            ]:
+                df[
+                    "projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"
+                ] = df[
+                    "projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"
+                ].astype(
+                    "object"
+                )
+                df = df[
+                    df[
+                        "projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"
+                    ].str.contains(
+                        f.data[
+                            "projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"
+                        ],
+                        case=False,
+                    )
+                ]
+                df[
+                    "projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"
+                ] = df[
+                    "projectionxrayradiationdose__irradeventxraydata__standard_protocols__standard_name"
+                ].astype(
+                    "category"
+                )
+        #######################################################################
+
         if user_profile.plotDXAcquisitionMeanDAP:
 
             name_field = (
