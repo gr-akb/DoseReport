@@ -864,6 +864,74 @@ def ct_plot_calculations(f, user_profile, return_as_dict=False):
             uid="ctradiationdose__ctirradiationeventdata__pk",
         )
 
+        #######################################################################
+        # Addressing issue 1050 (https://bitbucket.org/openrem/openrem/issues/1050) for CT.
+        # There are only two filters that need to be considered for CT. and there is only an issue if both
+        # filters are populated with a value. The logic below is therefore slightly different to what is
+        # used in the views_charts_dx.py file to address the same issue.
+        # If both acquisition protocol name and standard acquisition name filter values are present
+        # then filter the data frame using the values provided for these filters.
+        if "ctradiationdose__ctirradiationeventdata__acquisition_protocol" in f.data:
+            if f.data["ctradiationdose__ctirradiationeventdata__acquisition_protocol"]:
+                if (
+                    "ctradiationdose__ctirradiationeventdata__standard_protocols__standard_name"
+                    in f.data
+                ):
+                    if f.data[
+                        "ctradiationdose__ctirradiationeventdata__standard_protocols__standard_name"
+                    ]:
+
+                        df[
+                            "ctradiationdose__ctirradiationeventdata__acquisition_protocol"
+                        ] = df[
+                            "ctradiationdose__ctirradiationeventdata__acquisition_protocol"
+                        ].astype(
+                            "object"
+                        )
+                        df = df[
+                            df[
+                                "ctradiationdose__ctirradiationeventdata__acquisition_protocol"
+                            ].str.contains(
+                                f.data[
+                                    "ctradiationdose__ctirradiationeventdata__acquisition_protocol"
+                                ],
+                                case=False,
+                            )
+                        ]
+                        df[
+                            "ctradiationdose__ctirradiationeventdata__acquisition_protocol"
+                        ] = df[
+                            "ctradiationdose__ctirradiationeventdata__acquisition_protocol"
+                        ].astype(
+                            "category"
+                        )
+
+                        df[
+                            "ctradiationdose__ctirradiationeventdata__standard_protocols__standard_name"
+                        ] = df[
+                            "ctradiationdose__ctirradiationeventdata__standard_protocols__standard_name"
+                        ].astype(
+                            "object"
+                        )
+                        df = df[
+                            df[
+                                "ctradiationdose__ctirradiationeventdata__standard_protocols__standard_name"
+                            ].str.contains(
+                                f.data[
+                                    "ctradiationdose__ctirradiationeventdata__standard_protocols__standard_name"
+                                ],
+                                case=False,
+                            )
+                        ]
+                        df[
+                            "ctradiationdose__ctirradiationeventdata__standard_protocols__standard_name"
+                        ] = df[
+                            "ctradiationdose__ctirradiationeventdata__standard_protocols__standard_name"
+                        ].astype(
+                            "category"
+                        )
+        #######################################################################
+
         # Only keep the required acquisition type code meanings and values
         code_meanings_to_keep = required_ct_acquisition_types(user_profile)
 

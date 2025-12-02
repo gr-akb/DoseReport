@@ -657,9 +657,9 @@ def download(request, task_id):
         response = HttpResponse(file_wrapper, content_type=file_mimetype)
     response["X-Sendfile"] = file_path
     response["Content-Length"] = os.stat(file_path).st_size
-    response["Content-Disposition"] = "attachment; filename=%s" % smart_str(  # pylint: disable=consider-using-f-string
+    response["Content-Disposition"] = "attachment; filename=%s" % smart_str(
         exp.filename
-    )
+    )  # pylint: disable=consider-using-f-string
     return response
 
 
