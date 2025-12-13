@@ -53,7 +53,7 @@ If these two lines are not there or are commented out (line starts with a ``#``)
 
 .. code-block:: console
 
-    $ sudo apt install acl python3.12 python3.12-dev python3.12-distutils python3.12-venv python3-pip \
+    $ sudo apt install acl python3.12 python3.12-dev python3.12-venv python3-pip \
     postgresql nginx orthanc dcmtk default-jre zip gettext
 
 **Redis**
