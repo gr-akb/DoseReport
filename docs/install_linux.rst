@@ -442,7 +442,7 @@ Copy the Gunicorn systemd service file into place:
 
 .. note::
 
-    Content of systemd file:
+    Content of systemd file (you will need to change the ``python3.12`` in the path if you are using a different version):
 
     .. code-block:: bash
 
@@ -470,7 +470,7 @@ Copy the task queue consumer systemd service file into place:
 
 .. note::
 
-    Content of systemd file:
+    Content of systemd file (you will need to change the ``python3.12`` in the path if you are using a different version):
 
     .. code-block:: bash
 
