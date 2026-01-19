@@ -8,6 +8,17 @@
 {% with patientstudy=generalstudymoduleattr.patientstudymoduleattr_set.get %}
 {% with equipment=generalstudymoduleattr.generalequipmentmoduleattr_set.get %}
   <ul>
+    {% if admin.pidgroup %}
+        {% if patient_id_settings.id_showed %}
+            <li>Patient ID: {{ generalstudymoduleattr.patientmoduleattr_set.get.patient_id }}</li>
+        {% endif %}
+        {% if patient_id_settings.name_showed %}
+            <li>Patient Name: {{ generalstudymoduleattr.patientmoduleattr_set.get.patient_name }}</li>
+        {% endif %}
+        {% if patient_id_settings.dob_showed %}
+            <li>Patient birthdate: {{ generalstudymoduleattr.patientmoduleattr_set.get.patient_birth_date }}</li>
+        {% endif %}
+    {% endif %}
     <li>
         Accession number:
         {% if not generalstudymoduleattr.accession_hashed %}

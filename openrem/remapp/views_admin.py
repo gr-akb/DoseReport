@@ -2337,10 +2337,13 @@ class PatientIDSettingsUpdate(UpdateView):  # pylint: disable=unused-variable
     fields = [
         "name_stored",
         "name_hashed",
+        "name_showed",
         "id_stored",
         "id_hashed",
+        "id_showed",
         "accession_hashed",
         "dob_stored",
+        "dob_showed",
     ]
 
     def get_context_data(self, **context):

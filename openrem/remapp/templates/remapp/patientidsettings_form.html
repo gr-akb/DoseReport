@@ -14,7 +14,7 @@
 
       <div class="row">
       <div class="col-md-6 col-md-offset-3">
-        <h3>Modify Patient ID storage settings</h3>
+        <h3>Modify Patient ID settings</h3>
         {% if admin.admingroup %}
             <form action="" method="post">
                 <table class="table">
@@ -23,6 +23,7 @@
                         <th></th>
                         <th><h4>Store the data?</h4></th>
                         <th><h4>If stored, encrypt?</h4></th>
+                        <th><h4>If stored, show?</h4></th>
                     </tr>
                     <tr>
                         <td>
@@ -35,6 +36,10 @@
                         <td>
                             {{ form.name_hashed.errors }}
                             {{ form.name_hashed }}
+                        </td>
+                        <td>
+                            {{ form.name_showed.errors }}
+                            {{ form.name_showed }}
                         </td>
                     </tr>
                     <tr>
@@ -49,6 +54,10 @@
                             {{ form.id_hashed.errors }}
                             {{ form.id_hashed }}
                         </td>
+                        <td>
+                            {{ form.id_showed.errors }}
+                            {{ form.id_showed }}
+                        </td>
                     </tr>
                     <tr>
                         <td>
@@ -60,6 +69,10 @@
                         </td>
                         <td>
                         </td>
+                        <td>
+                            {{ form.dob_showed.errors }}
+                            {{ form.dob_showed }}
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="2">
@@ -69,11 +82,14 @@
                             {{ form.accession_hashed.errors }}
                             {{ form.accession_hashed }}
                         </td>
+                        <td></td>
                     </tr>
                 </table>
               <input class="btn btn-primary" type="submit" value="Submit">
               <a class="btn btn-default" href="{% url 'home' %}" role="button">Cancel</a>
             </form>
+            <p/>
+            <p>Only users in the PID group can see patient sensitive data.</p>
         {% else %}
             <p>Only users in the Admin group can modify these settings.</p>
         {% endif %}

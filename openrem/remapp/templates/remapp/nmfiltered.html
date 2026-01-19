@@ -131,7 +131,14 @@
                     <tr><th scope="col" class="nowrap">Display name</th></tr>
                 </table>
             </th>
-            <th>Date</th>
+            <th>
+                <table aria-describedby="Patient ID and study date">
+                    {% if admin.pidgroup and pid_showed %}
+                        <tr><th scope="col" class="nowrap">Patient ID</th></tr>
+                    {% endif %}
+                    <tr><th scope="col" class="nowrap">Date</th></tr>
+                </table>
+            </th>
             <th>
                 <table aria-describedby="Study description, procedure, requested procedure and accession number">
                     <tr><th scope="col" class="nowrap">Study description</th></tr>
@@ -166,8 +173,17 @@
                     </td>
                     <td>
                         <a href="{% url 'nm_detail_view' pk=exam.id %}">
-                            {{ exam.study_date|date:"Y-m-d" }} {{ exam.study_time|date:"H:i" }}</td>
-                    </a>
+                            <table onclick="window.location='{% url 'nm_detail_view' pk=exam.id %}';" aria-describedby="Patient ID and study date">
+                                {% if admin.pidgroup and pid_showed %}
+                                    <tr><td class="nowrap">{{ exam.patientmoduleattr_set.get.patient_id }}</td></tr>
+                                {% endif %}
+                                <tr>
+                                    <td class="nowrap">{{ exam.study_date|date:"Y-m-d" }} {{ exam.study_time|date:"H:i" }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </a>
+                    </td>
                     <td>
                         <a href="{% url 'nm_detail_view' pk=exam.id %}">
                             <table onclick="window.location='{% url 'nm_detail_view' pk=exam.id %}';" aria-describedby="Study description, procedure and requested procedure name">

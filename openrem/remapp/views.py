@@ -226,6 +226,8 @@ def dx_summary_list_filter(request):
             user_profile
         )
 
+    return_structure["pid_showed"] = PatientIDSettings.objects.get().id_showed
+
     return render(request, "remapp/dxfiltered.html", return_structure)
 
 
@@ -261,6 +263,7 @@ def dx_detail_view(request, pk=None):
         {
             "generalstudymoduleattr": study,
             "admin": admin,
+            "patient_id_settings": PatientIDSettings.objects.get(),
             "projection_set": projection_set,
             "events_all": events_all,
             "accum_set": accum_set,
@@ -325,6 +328,8 @@ def rf_summary_list_filter(request):
         return_structure["required_charts"] = generate_required_rf_charts_list(
             user_profile
         )
+
+    return_structure["pid_showed"] = PatientIDSettings.objects.get().id_showed
 
     return render(request, "remapp/rffiltered.html", return_structure)
 
@@ -521,6 +526,7 @@ def rf_detail_view(request, pk=None):
         {
             "generalstudymoduleattr": study,
             "admin": admin,
+            "patient_id_settings": PatientIDSettings.objects.get(),
             "study_totals": study_totals,
             "projection_xray_dose_set": projection_xray_dose_set,
             "accumxraydose_set_all_planes": accumxraydose_set_all_planes,
@@ -732,6 +738,8 @@ def nm_summary_list_filter(request):
             user_profile
         )
 
+    return_structure["pid_showed"] = PatientIDSettings.objects.get().id_showed
+
     return render(request, "remapp/nmfiltered.html", return_structure)
 
 
@@ -757,6 +765,7 @@ def nm_detail_view(request, pk=None):
         {
             "generalstudymoduleattr": study,
             "admin": admin,
+            "patient_id_settings": PatientIDSettings.objects.get(),
             "associated_ct": associated_ct,
             "showStandardNames": enable_standard_names,
         },
@@ -777,6 +786,8 @@ def ct_summary_list_filter(request):
         return_structure["required_charts"] = generate_required_ct_charts_list(
             user_profile
         )
+
+    return_structure["pid_showed"] = PatientIDSettings.objects.get().id_showed
 
     return render(request, "remapp/ctfiltered.html", return_structure)
 
@@ -813,6 +824,7 @@ def ct_detail_view(request, pk=None):
         {
             "generalstudymoduleattr": study,
             "admin": admin,
+            "patient_id_settings": PatientIDSettings.objects.get(),
             "events_all": events_all,
             "associated_nm": associated_nm,
             "showStandardNames": enable_standard_names,
@@ -867,6 +879,8 @@ def mg_summary_list_filter(request):
             user_profile
         )
 
+    return_structure["pid_showed"] = PatientIDSettings.objects.get().id_showed
+
     return render(request, "remapp/mgfiltered.html", return_structure)
 
 
@@ -900,6 +914,7 @@ def mg_detail_view(request, pk=None):
         {
             "generalstudymoduleattr": study,
             "admin": admin,
+            "patient_id_settings": PatientIDSettings.objects.get(),
             "projection_xray_dose_set": projection_xray_dose_set,
             "accum_mammo_set": accum_mammo_set,
             "events_all": events_all,
