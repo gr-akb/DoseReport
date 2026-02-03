@@ -58,6 +58,15 @@ will be generated.
 
 The same applies to accession numbers if the option to encrypt the accession number is selected.
 
+************************
+Show stored patient data
+************************
+
+If you wish to show the patient name, patient ID and/or patient birth date on the studies overview page (patient ID only)
+and on the study detailed pages, you can check the corresponding boxes in the column "if stored, show?"
+
+This patient sensitive information is only shown to users in the ``pidgroup``.
+
 *******************************
 Using patient identifiable data
 *******************************

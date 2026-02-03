@@ -42,6 +42,7 @@ from builtins import map  # pylint: disable=redefined-builtin
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User  # pylint: disable=all
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q, Sum, Count, Max
@@ -2330,7 +2331,7 @@ def task_remove(request, task_id=None):
     return redirect(reverse_lazy("task_admin"))
 
 
-class PatientIDSettingsUpdate(UpdateView):  # pylint: disable=unused-variable
+class PatientIDSettingsUpdate(SuccessMessageMixin, UpdateView):  # pylint: disable=unused-variable
     """UpdateView to update the patient ID settings"""
 
     model = PatientIDSettings
@@ -2345,6 +2346,10 @@ class PatientIDSettingsUpdate(UpdateView):  # pylint: disable=unused-variable
         "dob_stored",
         "dob_showed",
     ]
+    # Now the Patient ID Settings page is shown after a submit.
+    # One Could also return to home page and have success message there. For that, just remove next line.
+    success_url = reverse_lazy("patient_id_settings_update", kwargs={"pk": 1})
+    success_message = "Patient ID settings updated successfully"
 
     def get_context_data(self, **context):
         context = super(PatientIDSettingsUpdate, self).get_context_data(**context)
