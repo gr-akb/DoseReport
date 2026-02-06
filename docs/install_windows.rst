@@ -6,7 +6,7 @@ Native Windows install
 
 This install is based on Windows Server 2022 using:
 
-* Python 3.10 running in a virtualenv
+* Python 3.12 running in a virtualenv
 * Database: PostgreSQL
 * DICOM Store SCP: Orthanc running on port 104
 * Webserver: Microsoft IIS running on port 80
@@ -103,8 +103,7 @@ Installing packages
 Python
 ------
 
-Download the latest version for Windows from https://www.python.org/downloads/ as long as it is in the 3.10 series.
-OpenREM v1.0 has not been tested with Python 3.11 yet.
+Download the latest version for Windows from https://www.python.org/downloads/ as long as it is in the 3.12 series.
 
 Open the downloaded file to start the installation:
 
@@ -138,7 +137,7 @@ PostgreSQL
 ----------
 
 Download the latest version of PostgreSQL from https://www.enterprisedb.com/downloads/postgres-postgresql-downloads -
-choose the Windows x86-64 version. OpenREM v1.0 has been tested with PostgreSQL v14.5.
+choose the Windows x86-64 version. OpenREM v1.0 has been tested with PostgreSQL v14 and v16.
 
 Open the downloaded file to start the installation:
 
@@ -164,7 +163,7 @@ gettext
     The gettext binary enables the translations to be available to users of the web interface. It is not
     essential if you don't want the translations to be available.
 
-Download the 64 bit static version of gettext 0.21 from https://mlocati.github.io/articles/gettext-iconv-windows.html.
+Download the 64 bit static version of gettext from https://mlocati.github.io/articles/gettext-iconv-windows.html.
 Use the ``.exe`` version (software install icon, not the zip icon)
 
 .. figure:: img/DownloadGetTextHighlighted.png
@@ -359,7 +358,7 @@ Install OpenREM
 .. code-block:: console
 
     (venv) E:\>pip install --upgrade pip
-    (venv) E:\>pip install openrem==1.0.0b2
+    (venv) E:\>pip install openrem==1.0.0b3
     (venv) E:\>pip install wfastcgi
 
 OpenREM configuration and database creation
@@ -513,7 +512,8 @@ In a ``CMD`` window, move to the openrem Python folder and activate the virtuale
     * Rename ``E:\venv\Lib\site-packages\openrem\remapp\migrations\0001_initial.py.1-0-upgrade`` to ``0001_initial.py``
 
     Import the database - update the path to the database backup file you copied from the old server. These steps
-    can take a long time depending on the size of the database and the resources of the server:
+    can take a long time depending on the size of the database and the resources of the server (be sure to use the
+    correct path to your PostgreSQL binary folder):
 
     .. code-block::
 

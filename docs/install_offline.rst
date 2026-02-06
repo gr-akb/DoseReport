@@ -44,13 +44,13 @@ Download Python packages from PyPI
 
 In a console, navigate to a suitable place and create an empty directory to collect all the packages in, then use
 ``pip`` to download them all - Python 3 (including Pip) will need to be installed on the computer with internet access
-to download the packages, ideally Python 3.10:
+to download the packages, ideally Python 3.12:
 
 .. code-block:: console
 
     C:\Users\me\Desktop> mkdir openremfiles
     C:\Users\me\Desktop> pip3 download -d openremfiles pip
-    C:\Users\me\Desktop> pip3 download -d openremfiles openrem==1.0.0b2
+    C:\Users\me\Desktop> pip3 download -d openremfiles openrem==1.0.0b3
     C:\Users\me\Desktop> pip3 download -d openremfiles wfastcgi
 
 Copy everything to the Server

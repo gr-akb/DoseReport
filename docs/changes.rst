@@ -3,8 +3,9 @@ OpenREM version history
 =======================
 
 
-1.0.0b2 (2023-04-20)
+1.0.0b3 (2025-12-02)
 --------------------
+* :issue:`1050`  Charts: fixed bug where acquisition level filtering did not work correctly when multiple filters were combined
 * :issue:`1045`  Charts: fixed bug where word-wrapping caused charts to fail if using python 3.12 and pandas 2.2.2
 * :issue:`1044`  Interface: now filtering unmapped acquisition protocols using the modality when creating or modifying a standard name
 * :issue:`1037`  Imports: removed blocking behaviour import tasks

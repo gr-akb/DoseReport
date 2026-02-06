@@ -5,17 +5,17 @@ Native Linux install
 
 This install is based on Ubuntu 22.04 using:
 
-* Python 3.10 running in a virtualenv
+* Python 3.12 running in a virtualenv
 * Database: PostgreSQL
 * DICOM Store SCP: Orthanc running on port 104
 * Webserver: NGINX with Gunicorn
 * All OpenREM files in ``/var/dose/`` with group owner of ``openrem``
 * Collects any Physics (QA) images and zips them
 
-The instructions should work for Ubuntu 20.04 too, references to jammy will be focal instead.
+The instructions should work for Ubuntu 20.04 or 24.04 too, references to jammy will be focal or noble instead.
 
-There are various commands and paths that reference the Python version 3.10 in these instructions. If you are using
-Python 3.8 or Python 3.9 then these will need to be modified accordingly.
+There are various commands and paths that reference the Python version 3.12 in these instructions. If you are using
+Python 3.10 or 3.11 then these will need to be modified accordingly.
 
 If you are upgrading an existing installation to a new Linux server, go to the :doc:`upgrade_linux_new_server` docs
 first.
@@ -53,7 +53,7 @@ If these two lines are not there or are commented out (line starts with a ``#``)
 
 .. code-block:: console
 
-    $ sudo apt install acl python3.10 python3.10-dev python3.10-distutils python3.10-venv python3-pip \
+    $ sudo apt install acl python3.12 python3.12-dev python3.12-venv python3-pip \
     postgresql nginx orthanc dcmtk default-jre zip gettext
 
 **Redis**
@@ -159,7 +159,7 @@ Create a virtualenv (Python local environment) in the folder we created:
 
 .. code-block:: console
 
-    $ python3.10 -m venv /var/dose/veopenrem3
+    $ python3.12 -m venv /var/dose/veopenrem3
 
 .. _activatevirtualenv:
 
@@ -181,7 +181,7 @@ Install Python packages
 
 .. code-block:: console
 
-    $ pip install openrem==1.0.0b2
+    $ pip install openrem==1.0.0b3
 
 .. _Linux-DB:
 
@@ -239,7 +239,7 @@ Navigate to the Python openrem folder and copy the example ``local_settings.py``
 
 .. code-block:: console
 
-    $ cd /var/dose/veopenrem3/lib/python3.10/site-packages/openrem/
+    $ cd /var/dose/veopenrem3/lib/python3.12/site-packages/openrem/
     $ cp openremproject/local_settings.py{.linux,}
     $ cp openremproject/wsgi.py{.example,}
 
@@ -348,7 +348,7 @@ the virtualenv is active — prompt will look like
 
 .. code-block:: console
 
-    (veopenrem3)username@hostname:/var/dose/veopenrem3/lib/python3.10/site-packages/openrem/$
+    (veopenrem3)username@hostname:/var/dose/veopenrem3/lib/python3.12/site-packages/openrem/$
 
 Otherwise see :ref:`activatevirtualenv` and navigate back to that folder.
 
@@ -399,7 +399,7 @@ Copy in the OpenREM site config file
 
 .. code-block:: console
 
-    $ cd /var/dose/veopenrem3/lib/python3.10/site-packages/openrem/
+    $ cd /var/dose/veopenrem3/lib/python3.12/site-packages/openrem/
     $ sudo cp sample-config/openrem-server /etc/nginx/sites-available/openrem-server
 
 .. note::
@@ -437,12 +437,12 @@ Copy the Gunicorn systemd service file into place:
 
 .. code-block:: console
 
-    $ cd /var/dose/veopenrem3/lib/python3.10/site-packages/openrem/
+    $ cd /var/dose/veopenrem3/lib/python3.12/site-packages/openrem/
     $ sudo cp sample-config/openrem-gunicorn.service /etc/systemd/system/openrem-gunicorn.service
 
 .. note::
 
-    Content of systemd file:
+    Content of systemd file (you will need to change the ``python3.12`` in the path if you are using a different version):
 
     .. code-block:: bash
 
@@ -452,7 +452,7 @@ Copy the Gunicorn systemd service file into place:
         [Service]
         Restart=on-failure
         User=www-data
-        WorkingDirectory=/var/dose/veopenrem3/lib/python3.10/site-packages/openrem
+        WorkingDirectory=/var/dose/veopenrem3/lib/python3.12/site-packages/openrem
 
         ExecStart=/var/dose/veopenrem3/bin/gunicorn \
             --bind unix:/tmp/openrem-server.socket \
@@ -465,12 +465,12 @@ Copy the task queue consumer systemd service file into place:
 
 .. code-block:: console
 
-    $ cd /var/dose/veopenrem3/lib/python3.10/site-packages/openrem/
+    $ cd /var/dose/veopenrem3/lib/python3.12/site-packages/openrem/
     $ sudo cp sample-config/openrem-consumer.service /etc/systemd/system/openrem-consumer.service
 
 .. note::
 
-    Content of systemd file:
+    Content of systemd file (you will need to change the ``python3.12`` in the path if you are using a different version):
 
     .. code-block:: bash
 
@@ -480,7 +480,7 @@ Copy the task queue consumer systemd service file into place:
         [Service]
         Restart=on-failure
         User=www-data
-        WorkingDirectory=/var/dose/veopenrem3/lib/python3.10/site-packages/openrem
+        WorkingDirectory=/var/dose/veopenrem3/lib/python3.12/site-packages/openrem
 
         ExecStart=/var/dose/veopenrem3/bin/python \
             manage.py run_huey
@@ -532,7 +532,7 @@ Copy the Lua file to the Orthanc folder. This will control how we process the in
 
 .. code-block:: console
 
-    $ cd /var/dose/veopenrem3/lib/python3.10/site-packages/openrem/
+    $ cd /var/dose/veopenrem3/lib/python3.12/site-packages/openrem/
     $ cp sample-config/openrem_orthanc_config_linux.lua /var/dose/orthanc/
 
 Edit the Orthanc Lua configuration options:

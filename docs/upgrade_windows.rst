@@ -19,7 +19,7 @@ on what it ends up looking like, we might point there with a few admonitions to 
 
 * Export database for backup
 * Stop all the services
-* Install Python 3.10
+* Install Python 3.12
 * Update PostgreSQL, Orthanc, DCMTK, Pixelmed
 * Add/update as necessary gettext, 7Zip, Notepad++
 * Install IIS if Apache/NGINX previously in use

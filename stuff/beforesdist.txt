@@ -9,6 +9,7 @@ git clone git@bitbucket.org:openrem/openrem.git openrem-for-release
 
 
 Make sure develop is up to date, branch as release-version, eg release-0.9.0b5
+git checkout -b release-1.0.0b3
 Checkout the release-version branch
 
 Change the version number in
@@ -36,6 +37,12 @@ rm -r *
 Then get the new contents:
 rsync -av --exclude-from='../openrem-for-release/stuff/distexclude.txt' ../openrem-for-release/ .
 cp ../openrem-for-release/stuff/v1initial.py openrem/remapp/migrations/0001_initial.py.1-0-upgrade
+
+*** Windows prep
+An xcopy version is included instead of rsync, the command for which would be:
+xcopy .\openrem-for-release\ .\distribute\ /exclude:openrem-for-release\stuff\distexcludexcopy.txt /e
+BUT: you need to copy the three local_settings.py.* files and wsgi.py.example file manually.
+cp ..\openrem-for-release\stuff\v1initial.py openrem\remapp\migrations\0001_initial.py.1-0-upgrade
 
 Build:
     Activate the venv you are using, then

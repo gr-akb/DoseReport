@@ -1,4 +1,4 @@
-image: python:3.10
+image: python:3.12.5
 
 clone:
   depth: full    # SonarCloud scanner needs the full history to assign issues properly
@@ -61,6 +61,7 @@ definitions:
           - >-
             sed -i "/^LOG_ROOT/c\LOG_ROOT = ''" openrem/openremproject/local_settings.py
           - mv openrem/openremproject/wsgi.py{.example,}
+          - pip install setuptools
           - pip install -e .
           - pip install coverage
           - pip install coveralls
@@ -78,7 +79,7 @@ definitions:
         caches:
           - pip
     - step: &test-slow
-        trigger: manual
+#        trigger: manual
         name: run django tests tagged as slow
         script:
           - mv openrem/openremproject/local_settings.py{.linux,}
@@ -100,6 +101,7 @@ definitions:
           - >-
             sed -i "/^LOG_ROOT/c\LOG_ROOT = ''" openrem/openremproject/local_settings.py
           - mv openrem/openremproject/wsgi.py{.example,}
+          - pip install setuptools
           - pip install -e .
           - pip install coverage
           - pip install coveralls
@@ -138,6 +140,7 @@ definitions:
           - >-
             sed -i "/^LOG_ROOT/c\LOG_ROOT = ''" openrem/openremproject/local_settings.py
           - mv openrem/openremproject/wsgi.py{.example,}
+          - pip install setuptools
           - pip install -e .
           - pip install coverage
           - pip install coveralls
@@ -154,9 +157,9 @@ definitions:
           - postgres
         caches:
           - pip
-    - step: &test-python3.8
-        image: python:3.8
-        name: Python 3.8 test
+    - step: &test-python3.10
+        image: python:3.10
+        name: Python 3.10 test
 #        trigger: manual
         script:
           - mv openrem/openremproject/local_settings.py{.linux,}
@@ -194,9 +197,9 @@ definitions:
           - postgres
         caches:
           - pip
-    - step: &test-python3.9
-        image: python:3.9
-        name: Python 3.9 test
+    - step: &test-python3.11
+        image: python:3.11
+        name: Python 3.11 test
         script:
           - mv openrem/openremproject/local_settings.py{.linux,}
           - sed -i "s/INFO/DEBUG/g" openrem/openremproject/local_settings.py
@@ -274,10 +277,10 @@ pipelines:
           deployment: testing  # deployment has $server as a variable = testing.openrem.org
     deploy-to-docker:
       - step: *build-and-deploy-to-docker
-    test-python-3.8:
-      - step: *test-python3.8
-    test-python-3.9:
-      - step: *test-python3.9
+    test-python-3.10:
+      - step: *test-python3.10
+    test-python-3.11:
+      - step: *test-python3.11
     test-slow:
       - step: *test-slow
   default:  # Standard commits are tested but not deployed

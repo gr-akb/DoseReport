@@ -19,7 +19,7 @@ Documentation is on Read the Docs: https://docs.openrem.org/, and a demo of the 
 http://demo.openrem.org; username `demo` password `demo`
 
 For upgrades and fresh installs, please review the
-`install docs <https://docs.openrem.org/en/1.0.0b2-docs/installation.html>`_.
+`install docs <https://docs.openrem.org/en/1.0.0b3-docs/installation.html>`_.
 
 Contribution of code, ideas, bug reports documentation is all welcome.
 Please feel free to fork the repository and send pull requests. See
@@ -41,7 +41,7 @@ Current release version:
 
 Development version
 
-.. image:: https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10-blue
+.. image:: https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue
 
 .. image:: https://img.shields.io/bitbucket/issues/openrem/openrem.svg?
     :target: https://bitbucket.org/openrem/openrem/issues?status=new&status=open

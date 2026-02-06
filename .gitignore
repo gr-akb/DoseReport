@@ -33,3 +33,6 @@ docs/_static/*
 
 # Task queue files
 *.db*
+
+# Build related
+*.tar.gz

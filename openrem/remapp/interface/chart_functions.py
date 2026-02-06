@@ -244,7 +244,9 @@ def create_dataframe_time_series(
 
     df_time_series = (
         df.set_index(df_date_col)
-        .groupby([group_by_column, df_name_col, pd.Grouper(freq=time_period)])
+        .groupby(
+            [group_by_column, df_name_col, pd.Grouper(freq=time_period)], observed=False
+        )
         .agg({df_value_col: average_choices})
     )
     df_time_series.columns = [s + df_value_col for s in average_choices]
@@ -270,7 +272,7 @@ def create_dataframe_weekdays(df, df_name_col, df_date_col="study_date"):
     df["hour"] = df["study_time"].apply(lambda row: row.hour).astype("int8")
 
     df_time_series = (
-        df.groupby(["x_ray_system_name", "weekday", "hour"])
+        df.groupby(["x_ray_system_name", "weekday", "hour"], observed=False)
         .agg({df_name_col: "count"})
         .reset_index()
     )
@@ -301,7 +303,9 @@ def create_dataframe_aggregates(df, df_name_cols, df_agg_col, stats_to_use=None)
         stats_to_use = ["count"]
 
     groupby_cols = ["x_ray_system_name"] + df_name_cols
-    grouped_df = df.groupby(groupby_cols).agg({df_agg_col: stats_to_use})
+    grouped_df = df.groupby(groupby_cols, observed=False).agg(
+        {df_agg_col: stats_to_use}
+    )
     grouped_df.columns = grouped_df.columns.droplevel(level=0)
     grouped_df = grouped_df.reset_index()
 
@@ -606,14 +610,14 @@ def plotly_boxplot(
                 )
         elif params["sorting_choice"][1].lower() == "frequency":
             sorting_categories = {
-                params["df_name_col"]: df.groupby(params["df_name_col"])
+                params["df_name_col"]: df.groupby(params["df_name_col"], observed=False)
                 .agg(freq=(params["df_name_col"], "count"))
                 .sort_values(by="freq", ascending=sort_ascending)
                 .reset_index()[params["df_name_col"]]
                 .tolist()
             }
             sorting_categories["x_ray_system_name"] = (
-                df.groupby("x_ray_system_name")
+                df.groupby("x_ray_system_name", observed=False)
                 .agg(freq=("x_ray_system_name", "count"))
                 .sort_values(by="freq", ascending=sort_ascending)
                 .reset_index()["x_ray_system_name"]
@@ -621,7 +625,7 @@ def plotly_boxplot(
             )
             if params["facet_col"]:
                 sorting_categories[params["facet_col"]] = (
-                    df.groupby(params["facet_col"])
+                    df.groupby(params["facet_col"], observed=False)
                     .agg(freq=(params["facet_col"], "count"))
                     .sort_values(by="freq", ascending=sort_ascending)
                     .reset_index()[params["facet_col"]]
@@ -629,14 +633,14 @@ def plotly_boxplot(
                 )
         else:
             sorting_categories = {
-                params["df_name_col"]: df.groupby(params["df_name_col"])
+                params["df_name_col"]: df.groupby(params["df_name_col"], observed=False)
                 .agg(mean=(params["df_value_col"], "mean"))
                 .sort_values(by="mean", ascending=sort_ascending)
                 .reset_index()[params["df_name_col"]]
                 .tolist()
             }
             sorting_categories["x_ray_system_name"] = (
-                df.groupby("x_ray_system_name")
+                df.groupby("x_ray_system_name", observed=False)
                 .agg(mean=(params["df_value_col"], "mean"))
                 .sort_values(by="mean", ascending=sort_ascending)
                 .reset_index()["x_ray_system_name"]
@@ -644,7 +648,7 @@ def plotly_boxplot(
             )
             if params["facet_col"]:
                 sorting_categories[params["facet_col"]] = (
-                    df.groupby(params["facet_col"])
+                    df.groupby(params["facet_col"], observed=False)
                     .agg(mean=(params["df_value_col"], "mean"))
                     .sort_values(by="mean", ascending=sort_ascending)
                     .reset_index()[params["facet_col"]]
@@ -722,7 +726,7 @@ def create_freq_sorted_category_list(df, df_name_col, sorting):
     :param sorting: 2-element list. [0] sets sort direction, [1] used to determine which field to sort on
     :return: dictionary with key df_name_col and a list of sorted categories as the value
     """
-    category_sorting_df = df.groupby(df_name_col).count().reset_index()
+    category_sorting_df = df.groupby(df_name_col, observed=False).count().reset_index()
     if sorting[1] == "name":
         sort_by = df_name_col
     else:
@@ -757,7 +761,7 @@ def create_sorted_category_list(df, df_name_col, df_value_col, sorting):
     :return: dictionary with key df_name_col and a list of sorted categories as the value
     """
     # Calculate the required aggregates for creating a list of categories for sorting
-    grouped_df = df.groupby(df_name_col)
+    grouped_df = df.groupby(df_name_col, observed=False)
 
     if sorting[1].lower() == "name":
         sort_by = df_name_col
@@ -859,14 +863,14 @@ def plotly_barchart(
             )
     elif params["sorting_choice"][1].lower() == "frequency":
         sorting_categories = {
-            params["df_name_col"]: df.groupby(params["df_name_col"])
+            params["df_name_col"]: df.groupby(params["df_name_col"], observed=False)
             .agg({"count": "sum"})
             .sort_values(by="count", ascending=sort_ascending)
             .reset_index()[params["df_name_col"]]
             .tolist()
         }
         sorting_categories["x_ray_system_name"] = (
-            df.groupby("x_ray_system_name")
+            df.groupby("x_ray_system_name", observed=False)
             .agg({"count": "sum"})
             .sort_values(by="count", ascending=sort_ascending)
             .reset_index()["x_ray_system_name"]
@@ -874,7 +878,7 @@ def plotly_barchart(
         )
         if params["facet_col"]:
             sorting_categories[params["facet_col"]] = (
-                df.groupby(params["facet_col"])
+                df.groupby(params["facet_col"], observed=False)
                 .agg({"count": "sum"})
                 .sort_values(by="count", ascending=sort_ascending)
                 .reset_index()[params["facet_col"]]
@@ -882,14 +886,14 @@ def plotly_barchart(
             )
     else:
         sorting_categories = {
-            params["df_name_col"]: df.groupby(params["df_name_col"])
+            params["df_name_col"]: df.groupby(params["df_name_col"], observed=False)
             .agg({params["average_choice"]: "mean"})
             .sort_values(by=params["average_choice"], ascending=sort_ascending)
             .reset_index()[params["df_name_col"]]
             .tolist()
         }
         sorting_categories["x_ray_system_name"] = (
-            df.groupby("x_ray_system_name")
+            df.groupby("x_ray_system_name", observed=False)
             .agg({params["average_choice"]: "mean"})
             .sort_values(by=params["average_choice"], ascending=sort_ascending)
             .reset_index()["x_ray_system_name"]
@@ -897,7 +901,7 @@ def plotly_barchart(
         )
         if params["facet_col"]:
             sorting_categories[params["facet_col"]] = (
-                df.groupby(params["facet_col"])
+                df.groupby(params["facet_col"], observed=False)
                 .agg({params["average_choice"]: "mean"})
                 .sort_values(by=params["average_choice"], ascending=sort_ascending)
                 .reset_index()[params["facet_col"]]
@@ -1020,14 +1024,14 @@ def plotly_histogram_barchart(
         )
     elif params["sorting_choice"][1].lower() == "frequency":
         df_facet_list = (
-            df.groupby(params["df_facet_col"])
+            df.groupby(params["df_facet_col"], observed=False)
             .agg(freq=(params["df_facet_col"], "count"))
             .sort_values(by="freq", ascending=sort_ascending)
             .reset_index()[params["df_facet_col"]]
             .tolist()
         )
         df_category_list = (
-            df.groupby(params["df_category_col"])
+            df.groupby(params["df_category_col"], observed=False)
             .agg(freq=(params["df_category_col"], "count"))
             .sort_values(by="freq", ascending=sort_ascending)
             .reset_index()[params["df_category_col"]]
@@ -1035,14 +1039,14 @@ def plotly_histogram_barchart(
         )
     else:
         df_facet_list = (
-            df.groupby(params["df_facet_col"])
+            df.groupby(params["df_facet_col"], observed=False)
             .agg(mean=(params["df_value_col"], "mean"))
             .sort_values(by="mean", ascending=sort_ascending)
             .reset_index()[params["df_facet_col"]]
             .tolist()
         )
         df_category_list = (
-            df.groupby(params["df_category_col"])
+            df.groupby(params["df_category_col"], observed=False)
             .agg(mean=(params["df_value_col"], "mean"))
             .sort_values(by="mean", ascending=sort_ascending)
             .reset_index()[params["df_category_col"]]
@@ -1188,7 +1192,7 @@ def calc_histogram_bin_data(df, value_col_name, n_bins=10):
     :param n_bins: (int) the number of bins to use
     :return: a three element list containing the bin labels, bin boundaries and bin mid-points
     """
-    min_bin_value, max_bin_value = df[value_col_name].agg([min, max])
+    min_bin_value, max_bin_value = df[value_col_name].agg(["min", "max"])
     bins = np.linspace(min_bin_value, max_bin_value, n_bins + 1)
     mid_bins = 0.5 * (bins[:-1] + bins[1:])
     bin_labels = np.array(
@@ -1262,14 +1266,14 @@ def plotly_binned_statistic_barchart(
         )
     elif params["sorting_choice"][1].lower() == "frequency":
         df_category_name_list = (
-            df.groupby(params["df_category_col"])
+            df.groupby(params["df_category_col"], observed=False)
             .agg(freq=(params["df_category_col"], "count"))
             .sort_values(by="freq", ascending=sort_ascending)
             .reset_index()[params["df_category_col"]]
             .tolist()
         )
         df_facet_category_list = (
-            df.groupby(params["df_facet_col"])
+            df.groupby(params["df_facet_col"], observed=False)
             .agg(freq=(params["df_facet_col"], "count"))
             .sort_values(by="freq", ascending=sort_ascending)
             .reset_index()[params["df_facet_col"]]
@@ -1277,14 +1281,14 @@ def plotly_binned_statistic_barchart(
         )
     else:
         df_category_name_list = (
-            df.groupby(params["df_category_col"])
+            df.groupby(params["df_category_col"], observed=False)
             .agg(avg=(params["df_y_value_col"], params["stat_name"]))
             .sort_values(by="avg", ascending=sort_ascending)
             .reset_index()[params["df_category_col"]]
             .tolist()
         )
         df_facet_category_list = (
-            df.groupby(params["df_facet_col"])
+            df.groupby(params["df_facet_col"], observed=False)
             .agg(avg=(params["df_y_value_col"], params["stat_name"]))
             .sort_values(by="avg", ascending=sort_ascending)
             .reset_index()[params["df_facet_col"]]
@@ -1601,21 +1605,23 @@ def plotly_scatter(
         )
     elif params["sorting_choice"][1].lower() == "frequency":
         sorting_categories = {
-            params["df_category_name_col"]: df.groupby(params["df_category_name_col"])
+            params["df_category_name_col"]: df.groupby(
+                params["df_category_name_col"], observed=False
+            )
             .agg(freq=(params["df_category_name_col"], "count"))
             .sort_values(by="freq", ascending=sort_ascending)
             .reset_index()[params["df_category_name_col"]]
             .tolist()
         }
         sorting_categories["x_ray_system_name"] = (
-            df.groupby("x_ray_system_name")
+            df.groupby("x_ray_system_name", observed=False)
             .agg(freq=("x_ray_system_name", "count"))
             .sort_values(by="freq", ascending=sort_ascending)
             .reset_index()["x_ray_system_name"]
             .tolist()
         )
         sorting_categories[params["df_group_col"]] = (
-            df.groupby(params["df_group_col"])
+            df.groupby(params["df_group_col"], observed=False)
             .agg(freq=(params["df_group_col"], "count"))
             .sort_values(by="freq", ascending=sort_ascending)
             .reset_index()[params["df_group_col"]]
@@ -1623,21 +1629,23 @@ def plotly_scatter(
         )
     else:
         sorting_categories = {
-            params["df_category_name_col"]: df.groupby(params["df_category_name_col"])
+            params["df_category_name_col"]: df.groupby(
+                params["df_category_name_col"], observed=False
+            )
             .agg(mean=(params["df_y_col"], "mean"))
             .sort_values(by="mean", ascending=sort_ascending)
             .reset_index()[params["df_category_name_col"]]
             .tolist()
         }
         sorting_categories["x_ray_system_name"] = (
-            df.groupby("x_ray_system_name")
+            df.groupby("x_ray_system_name", observed=False)
             .agg(mean=(params["df_y_col"], "mean"))
             .sort_values(by="mean", ascending=sort_ascending)
             .reset_index()["x_ray_system_name"]
             .tolist()
         )
         sorting_categories[params["df_group_col"]] = (
-            df.groupby(params["df_group_col"])
+            df.groupby(params["df_group_col"], observed=False)
             .agg(mean=(params["df_y_col"], "mean"))
             .sort_values(by="mean", ascending=sort_ascending)
             .reset_index()[params["df_group_col"]]
@@ -1759,7 +1767,7 @@ def plotly_barchart_weekdays(
         }
     else:
         sorting_categories = {
-            "x_ray_system_name": df.groupby("x_ray_system_name")
+            "x_ray_system_name": df.groupby("x_ray_system_name", observed=False)
             .agg(freq=(df_value_col, "sum"))
             .sort_values(by="freq", ascending=sort_ascending)
             .reset_index()["x_ray_system_name"]
@@ -1918,14 +1926,16 @@ def plotly_frequency_barchart(
             )
     else:
         sorting_categories = {
-            params["df_x_axis_col"]: df_aggregated.groupby(params["df_x_axis_col"])
+            params["df_x_axis_col"]: df_aggregated.groupby(
+                params["df_x_axis_col"], observed=False
+            )
             .agg({"count": "sum"})
             .sort_values(by="count", ascending=sort_ascending)
             .reset_index()[params["df_x_axis_col"]]
             .tolist()
         }
         sorting_categories[df_legend_col] = (
-            df_aggregated.groupby(df_legend_col)
+            df_aggregated.groupby(df_legend_col, observed=False)
             .agg({"count": "sum"})
             .sort_values(by="count", ascending=sort_ascending)
             .reset_index()[df_legend_col]
@@ -1933,7 +1943,7 @@ def plotly_frequency_barchart(
         )
         if params["facet_col"]:
             sorting_categories[params["facet_col"]] = (
-                df_aggregated.groupby(params["facet_col"])
+                df_aggregated.groupby(params["facet_col"], observed=False)
                 .agg({"count": "sum"})
                 .sort_values(by="count", ascending=sort_ascending)
                 .reset_index()[params["facet_col"]]
