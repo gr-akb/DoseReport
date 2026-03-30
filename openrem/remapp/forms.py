@@ -409,6 +409,10 @@ class CTChartOptionsFormIncStandard(CTChartOptionsForm):
         required=False,
     )
     plotCTStandardAcquisitionMeanCTDI.group = "Standard acquisition name"
+    plotCTStandardAcquisitionMeanSSDE = forms.BooleanField(
+        label="Standard acquisition name SSDE", required=False
+    )
+    plotCTStandardAcquisitionMeanSSDE.group = "Standard acquisition name"
     plotCTStandardAcquisitionDLPOverTime = forms.BooleanField(
         label="Standard acquisition name DLP over time", required=False
     )
