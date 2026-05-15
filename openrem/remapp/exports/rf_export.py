@@ -504,9 +504,9 @@ def rfxlsx(filterdict, pid=False, name=None, patid=None, user=None):
 
                 # Remove exposures included in this group from inst
                 exposures_to_exclude = [
-                    o.irradiation_event_uid for o in similarexposures
+                    o.id for o in similarexposures
                 ]
-                inst = inst.exclude(irradiation_event_uid__in=exposures_to_exclude)
+                inst = inst.exclude(id__in=exposures_to_exclude)
 
                 angle1 = similarexposures.all().aggregate(
                     Min("irradeventxraymechanicaldata__positioner_primary_angle"),
