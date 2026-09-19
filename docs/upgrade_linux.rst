@@ -56,7 +56,7 @@ Install Python 3.12 and other packages:
 
 .. code-block:: console
 
-    $ sudo apt install acl python3.12 python3.12-dev python3.12-distutils python3.12-venv python3-pip \
+    $ sudo apt install acl python3.12 python3.12-dev python3.12-venv python3-pip \
     postgresql nginx orthanc dcmtk default-jre zip gettext
 
 Reset the permissions for the ``/var/dose`` folder:
